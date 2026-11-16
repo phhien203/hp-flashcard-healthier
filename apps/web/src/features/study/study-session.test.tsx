@@ -93,6 +93,26 @@ describe("StudySession", () => {
     await expect.element(screen.getByText("Card 3 of 3")).toBeVisible()
   })
 
+  it("fades the content on pointer navigation but changes instantly for the arrow keys", async () => {
+    const { screen } = await renderSession()
+
+    // A pointer click animates the content swapping in.
+    await screen.getByRole("button", { name: "Next" }).click()
+    const animated = screen
+      .getByText("What is the capital of France?")
+      .element()
+      .closest("div")!
+    expect(animated.className).toContain("animate-in")
+
+    // Arrow-key navigation changes instantly, with no enter animation.
+    await userEvent.keyboard("{ArrowRight}")
+    const instant = screen
+      .getByText("Who wrote 'Romeo and Juliet'?")
+      .element()
+      .closest("div")!
+    expect(instant.className).not.toContain("animate-in")
+  })
+
   it("hides the answer again when moving to another card", async () => {
     const { screen } = await renderSession()
     await screen.getByRole("button", { name: /Click to reveal answer/ }).click()
