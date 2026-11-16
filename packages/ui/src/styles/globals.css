@@ -1,0 +1,199 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+@import "@fontsource/poppins/400.css";
+@import "@fontsource/poppins/500.css";
+@import "@fontsource/poppins/600.css";
+@import "@fontsource/poppins/700.css";
+
+@source "../../../../apps/web/src/**/*.{ts,tsx}";
+@source "../**/*.{ts,tsx}";
+
+/*
+ * Token hierarchy
+ *
+ *   Figma primitives (--fc-*)         colors/neutral/900, spacing/250, corner-radius/16 …
+ *     └─ shadcn semantic tokens        --primary, --border, --destructive …
+ *          └─ Tailwind utilities       bg-primary, border-border, text-destructive …
+ *
+ * Primitive values are copied 1:1 from the Figma variables of the
+ * "flashcard-app" file. Components only ever use the semantic layer or the
+ * brand palette utilities (bg-pink-400 …) that map to named Figma colors.
+ * The design ships a single light theme, so there is no dark variant.
+ */
+:root {
+  /* colors/* */
+  --fc-neutral-0: #ffffff;
+  --fc-neutral-100: #f7f3f0;
+  --fc-neutral-600: #6d5b4d;
+  --fc-neutral-900: #2e1401;
+  --fc-yellow-500: #f8cb46;
+  --fc-blue-400: #92adeb;
+  --fc-blue-600: #5072c7;
+  --fc-teal-400: #47d9c9;
+  --fc-pink-400: #fc8ae5;
+  --fc-pink-500: #f073a3;
+  --fc-pink-700: #e11966;
+
+  /* shadcn semantic tokens */
+  --background: var(--fc-neutral-100);
+  --foreground: var(--fc-neutral-900);
+  --card: var(--fc-neutral-0);
+  --card-foreground: var(--fc-neutral-900);
+  --popover: var(--fc-neutral-0);
+  --popover-foreground: var(--fc-neutral-900);
+  --primary: var(--fc-yellow-500);
+  --primary-foreground: var(--fc-neutral-900);
+  --secondary: var(--fc-neutral-0);
+  --secondary-foreground: var(--fc-neutral-900);
+  --muted: var(--fc-neutral-100);
+  --muted-foreground: var(--fc-neutral-600);
+  --accent: var(--fc-neutral-100);
+  --accent-foreground: var(--fc-neutral-900);
+  --destructive: var(--fc-pink-700);
+  --border: var(--fc-neutral-900);
+  --input: var(--fc-neutral-900);
+  --ring: var(--fc-blue-600);
+  --radius: 16px;
+}
+
+@theme inline {
+  --font-sans: "Poppins", ui-sans-serif, system-ui, sans-serif;
+  --font-heading: var(--font-sans);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  /* Brand palette (Figma colors/*), used for the card faces and stat tiles */
+  --color-neutral-0: var(--fc-neutral-0);
+  --color-neutral-100: var(--fc-neutral-100);
+  --color-neutral-600: var(--fc-neutral-600);
+  --color-neutral-900: var(--fc-neutral-900);
+  --color-yellow-500: var(--fc-yellow-500);
+  --color-blue-400: var(--fc-blue-400);
+  --color-blue-600: var(--fc-blue-600);
+  --color-teal-400: var(--fc-teal-400);
+  --color-pink-400: var(--fc-pink-400);
+  --color-pink-500: var(--fc-pink-500);
+  --color-pink-700: var(--fc-pink-700);
+
+  /* corner-radius/* */
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-2xl: 16px;
+  --radius-4xl: 999px;
+
+  /* Hard "sticker" shadows used throughout the design */
+  --shadow-hard-1: 1px 1px 0 0 var(--fc-neutral-900);
+  --shadow-hard-2: 2px 2px 0 0 var(--fc-neutral-900);
+  --shadow-error: 2px 2px 0 0 var(--fc-pink-700);
+  --shadow-pop: 0 3px 8px 0 rgb(46 20 1 / 0.2);
+  --shadow-toast:
+    0 3px 8px 0 rgb(46 20 1 / 0.2), 2px 2px 0 0 var(--fc-neutral-900);
+
+  --ease-out-strong: cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+/* Figma text presets (text-preset-1 … text-preset-6) */
+@utility text-preset-1 {
+  font-size: 40px;
+  line-height: 1.2;
+  font-weight: 700;
+}
+@utility text-preset-2 {
+  font-size: 24px;
+  line-height: 1.2;
+  font-weight: 600;
+}
+@utility text-preset-3 {
+  font-size: 20px;
+  line-height: 1.2;
+  font-weight: 600;
+}
+@utility text-preset-4 {
+  font-size: 16px;
+  line-height: 1.2;
+  font-weight: 500;
+}
+@utility text-preset-4-semibold {
+  font-size: 16px;
+  line-height: 1.2;
+  font-weight: 600;
+}
+@utility text-preset-4-regular {
+  font-size: 16px;
+  line-height: 1.4;
+  font-weight: 400;
+}
+@utility text-preset-5 {
+  font-size: 14px;
+  line-height: 1.4;
+  font-weight: 500;
+}
+@utility text-preset-6 {
+  font-size: 12px;
+  line-height: 1.3;
+  font-weight: 500;
+  letter-spacing: -0.36px;
+}
+
+/* Keyboard focus ring from the "Focus" frames: 2px white gap + 2px blue-600 */
+@utility focus-ring {
+  outline: none;
+  &:focus-visible {
+    box-shadow:
+      0 0 0 2px var(--fc-neutral-0),
+      0 0 0 4px var(--ring);
+  }
+}
+
+/* Sticker panel: 1px border with a heavier bottom/right edge */
+@utility panel-edge-3 {
+  border-width: 1px 3px 3px 1px;
+  border-color: var(--border);
+}
+@utility panel-edge-4 {
+  border-width: 1px 4px 4px 1px;
+  border-color: var(--border);
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    @apply bg-background font-sans text-foreground antialiased;
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

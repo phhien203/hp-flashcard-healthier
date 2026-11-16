@@ -1,0 +1,29 @@
+node_modules
+.DS_Store
+dist
+dist-ssr
+coverage
+storybook-static
+*.local
+.env*
+!.env.example
+.dev.vars*
+!.dev.vars.example
+.nitro
+.tanstack
+.wrangler
+.output
+.vinxi
+__unconfig*
+
+# turbo
+.turbo
+
+# typescript
+*.tsbuildinfo
+
+# vitest browser mode
+__screenshots__
+.vitest-attachments
+worker-configuration.d.ts
+.vitest

@@ -1,0 +1,30 @@
+{
+  "name": "@workspace/db",
+  "version": "0.0.0",
+  "type": "module",
+  "private": true,
+  "description": "Drizzle schema, migrations and per-user card repository for Cloudflare D1.",
+  "scripts": {
+    "lint": "eslint",
+    "typecheck": "tsc --noEmit",
+    "generate": "drizzle-kit generate"
+  },
+  "dependencies": {
+    "@workspace/core": "workspace:*",
+    "drizzle-orm": "^0.45.4"
+  },
+  "devDependencies": {
+    "@tanstack/eslint-config": "^0.5.0",
+    "@types/better-sqlite3": "^9.6.0",
+    "@types/node": "^22",
+    "better-sqlite3": "^13.2.0",
+    "drizzle-kit": "^0.31.11",
+    "eslint": "^10",
+    "typescript": "^6.0.2",
+    "vitest": "^5.1.0"
+  },
+  "exports": {
+    ".": "./src/index.ts",
+    "./schema": "./src/schema.ts"
+  }
+}
