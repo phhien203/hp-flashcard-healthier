@@ -2,6 +2,18 @@ import type { Preview } from "@storybook/react-vite"
 import "../src/styles/globals.css"
 
 const preview: Preview = {
+  // Wait for Poppins so stories render with real metrics and axe's contrast
+  // checks see actual text, even on machines without system fonts.
+  loaders: [
+    async () => {
+      await Promise.all(
+        [400, 500, 600, 700].map((weight) =>
+          document.fonts.load(`${weight} 16px Poppins`)
+        )
+      )
+      return {}
+    },
+  ],
   parameters: {
     layout: "centered",
     backgrounds: {
