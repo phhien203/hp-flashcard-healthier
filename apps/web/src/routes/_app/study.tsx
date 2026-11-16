@@ -13,7 +13,7 @@ export const Route = createFileRoute("/_app/study")({
 })
 
 function StudyMode() {
-  const { cards, visible, stats, controls, search } = useDeck()
+  const { visible, emptyReason, stats, controls, search } = useDeck()
   const progress = useRecordProgress()
 
   return (
@@ -30,13 +30,7 @@ function StudyMode() {
             // A new filter or shuffle starts the session again from card 1.
             key={JSON.stringify(search)}
             cards={visible}
-            emptyReason={
-              cards.length === 0
-                ? "no-cards"
-                : search.hideMastered
-                  ? "all-mastered"
-                  : "no-matches"
-            }
+            emptyReason={emptyReason ?? "no-cards"}
             onProgress={(id, action) => progress.mutate({ id, action })}
             emptyAction={
               <Button variant="raised" asChild>

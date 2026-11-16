@@ -53,15 +53,15 @@ export function StatsPanel({
       <h2 id="stats-heading" className="text-preset-2">
         Study Statistics
       </h2>
-      <dl className="grid flex-1 gap-4 sm:grid-cols-2 sm:gap-5 lg:grid-cols-1">
+      <ul className="grid flex-1 gap-4 sm:grid-cols-2 sm:gap-5 lg:grid-cols-1">
         {TILES.map(({ key, label, icon, tone }) => (
-          <div
+          <li
             key={key}
-            className="flex min-h-[118px] overflow-hidden rounded-lg border border-r-2 border-b-2 border-border bg-card"
+            className="flex min-h-[118px] overflow-hidden rounded-lg panel-edge-2 bg-card"
           >
             <div className="flex flex-1 flex-col justify-between gap-3 px-5 py-4">
-              <dt className="text-preset-4">{label}</dt>
-              <dd className="text-preset-1 tabular-nums">{stats[key]}</dd>
+              <p className="text-preset-4">{label}</p>
+              <p className="text-preset-1 tabular-nums">{stats[key]}</p>
             </div>
             <div
               className={cn(
@@ -71,9 +71,9 @@ export function StatsPanel({
             >
               <Icon name={icon} />
             </div>
-          </div>
+          </li>
         ))}
-      </dl>
+      </ul>
     </section>
   )
 }

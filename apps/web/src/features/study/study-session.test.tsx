@@ -137,6 +137,27 @@ describe("StudySession", () => {
     await expect.element(screen.getByText("Card 2 of 2")).toBeVisible()
   })
 
+  it("shows the question of a card that slides into the slot of a revealed one", async () => {
+    const { screen } = await renderSession()
+    await screen.getByRole("button", { name: "Reveal answer" }).click()
+
+    // e.g. "I Know This" mastered the card while "Hide Mastered" is on
+    await screen.rerender(
+      <StudySession
+        cards={deck.slice(1)}
+        emptyReason="no-cards"
+        onProgress={vi.fn()}
+      />
+    )
+
+    await expect
+      .element(screen.getByText("What is the capital of France?"))
+      .toBeVisible()
+    await expect
+      .element(screen.getByText("Click to reveal answer"))
+      .toBeVisible()
+  })
+
   it.each([
     ["no-cards", "No cards to study"],
     ["all-mastered", "You’re all caught up!"],

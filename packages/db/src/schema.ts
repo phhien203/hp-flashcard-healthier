@@ -1,8 +1,9 @@
 import { sql } from "drizzle-orm"
 import { index, integer, sqliteTable, text } from "drizzle-orm/sqlite-core"
 
-const createdAt = () =>
-  integer("created_at", { mode: "timestamp_ms" })
+/** Millisecond timestamp column that defaults to the insert time. */
+const timestampMs = (name: string) =>
+  integer(name, { mode: "timestamp_ms" })
     .notNull()
     .default(sql`(unixepoch('subsec') * 1000)`)
 
@@ -14,7 +15,7 @@ const createdAt = () =>
 export const users = sqliteTable("users", {
   /** Clerk user id, e.g. `user_2abc…`. */
   id: text("id").primaryKey(),
-  createdAt: createdAt(),
+  createdAt: timestampMs("created_at"),
 })
 
 export const cards = sqliteTable(
@@ -31,10 +32,8 @@ export const cards = sqliteTable(
     category: text("category").notNull(),
     /** "I Know This" presses, 0–5; 5 means mastered. */
     knownCount: integer("known_count").notNull().default(0),
-    createdAt: createdAt(),
-    updatedAt: integer("updated_at", { mode: "timestamp_ms" })
-      .notNull()
-      .default(sql`(unixepoch('subsec') * 1000)`),
+    createdAt: timestampMs("created_at"),
+    updatedAt: timestampMs("updated_at"),
   },
   (t) => [index("cards_user_id_created_at_idx").on(t.userId, t.createdAt)]
 )

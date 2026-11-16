@@ -1,4 +1,4 @@
-import { cardInputSchema } from "@workspace/core"
+import { PROGRESS_ACTIONS, cardInputSchema } from "@workspace/core"
 import { createServerFn } from "@tanstack/react-start"
 import { z } from "zod"
 import { requireUser } from "./auth"
@@ -36,7 +36,7 @@ export const updateCard = createServerFn({ method: "POST" })
 
 export const recordProgress = createServerFn({ method: "POST" })
   .middleware([requireUser])
-  .validator(z.object({ id: cardId, action: z.enum(["know", "reset"]) }))
+  .validator(z.object({ id: cardId, action: z.enum(PROGRESS_ACTIONS) }))
   .handler(async ({ context, data }) => {
     return (
       (await cardRepository().recordProgress(

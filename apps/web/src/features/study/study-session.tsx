@@ -1,4 +1,9 @@
-import { isMastered, type Card, type ProgressAction } from "@workspace/core"
+import {
+  isMastered,
+  type Card,
+  type EmptyReason,
+  type ProgressAction,
+} from "@workspace/core"
 import { Button } from "@workspace/ui/components/button"
 import {
   Empty,
@@ -16,7 +21,7 @@ export type StudySessionProps = {
   /** Cards to study, already filtered and ordered. */
   cards: ReadonlyArray<Card>
   /** Why `cards` is empty, which decides the empty-state copy. */
-  emptyReason: "no-cards" | "all-mastered" | "no-matches"
+  emptyReason: EmptyReason
   onProgress: (id: string, action: ProgressAction) => void
   /** Call to action for the "No cards" state, e.g. a link to All Cards. */
   emptyAction?: React.ReactNode
@@ -33,7 +38,9 @@ export function StudySession({
   emptyAction,
 }: StudySessionProps) {
   const [position, setPosition] = useState(0)
-  const [revealed, setRevealed] = useState(false)
+  // Remember which card is flipped rather than a boolean, so a card that slides
+  // into the slot (the previous one was mastered or deleted) starts on its question.
+  const [revealedId, setRevealedId] = useState<string | null>(null)
 
   // If the current card leaves the list (mastered while "Hide Mastered" is on,
   // or deleted), the next card slides into its slot; clamp at the end.
@@ -43,7 +50,7 @@ export function StudySession({
   const go = (delta: number) => {
     if (cards.length === 0) return
     setPosition((index + delta + cards.length) % cards.length)
-    setRevealed(false)
+    setRevealedId(null)
   }
 
   useEffect(() => {
@@ -76,6 +83,7 @@ export function StudySession({
   }
 
   const mastered = isMastered(card)
+  const revealed = revealedId === card.id
 
   return (
     <>
@@ -83,7 +91,7 @@ export function StudySession({
         <StudyCard
           card={card}
           revealed={revealed}
-          onToggle={() => setRevealed((r) => !r)}
+          onToggle={() => setRevealedId(revealed ? null : card.id)}
         />
         <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:gap-5">
           <Button
@@ -154,7 +162,7 @@ function StudyEmpty({
   reason,
   action,
 }: {
-  reason: StudySessionProps["emptyReason"]
+  reason: EmptyReason
   action?: React.ReactNode
 }) {
   const copy = EMPTY_COPY[reason]

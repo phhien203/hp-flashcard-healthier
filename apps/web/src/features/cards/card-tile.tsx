@@ -9,7 +9,7 @@ import {
   DropdownMenuTrigger,
 } from "@workspace/ui/components/dropdown-menu"
 import { Icon } from "@workspace/ui/icons"
-import { CardProgress } from "../study/study-card"
+import { CardProgress } from "../deck/card-progress"
 
 export type CardTileProps = {
   card: Card

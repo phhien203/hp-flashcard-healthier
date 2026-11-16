@@ -23,7 +23,9 @@ const twMerge = extendTailwindMerge({
           ],
         },
       ],
-      shadow: [{ shadow: ["hard-1", "hard-2", "error", "pop", "toast"] }],
+      shadow: [
+        { shadow: ["hard-1", "hard-2", "tab", "error", "pop", "toast"] },
+      ],
     },
   },
 })

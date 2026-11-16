@@ -1,6 +1,7 @@
 import type { Card, CardInput } from "@workspace/core"
 import {
   AlertDialog,
+  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
@@ -8,7 +9,6 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@workspace/ui/components/alert-dialog"
-import { Button } from "@workspace/ui/components/button"
 import {
   Dialog,
   DialogContent,
@@ -76,14 +76,14 @@ export function DeleteCardDialog({
           <AlertDialogCancel variant="outline" className="font-semibold">
             Cancel
           </AlertDialogCancel>
-          <Button
+          <AlertDialogAction
             className="font-semibold"
             onClick={() => {
               if (card) onConfirm(card)
             }}
           >
             Delete Card
-          </Button>
+          </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

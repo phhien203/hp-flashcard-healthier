@@ -1,7 +1,8 @@
 import { MASTERY_THRESHOLD } from "./card"
 
 /** What the learner did with a card in Study Mode. */
-export type ProgressAction = "know" | "reset"
+export const PROGRESS_ACTIONS = ["know", "reset"] as const
+export type ProgressAction = (typeof PROGRESS_ACTIONS)[number]
 
 /** Next `knownCount` after a study action, clamped to the mastery threshold. */
 export function applyProgress(

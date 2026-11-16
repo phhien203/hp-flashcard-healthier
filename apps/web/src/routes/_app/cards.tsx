@@ -21,7 +21,7 @@ export const Route = createFileRoute("/_app/cards")({
 })
 
 function AllCards() {
-  const { cards, visible, controls, search } = useDeck()
+  const { cards, visible, emptyReason, controls, search } = useDeck()
   const create = useCreateCard()
   const update = useUpdateCard()
   const remove = useDeleteCard()
@@ -48,7 +48,7 @@ function AllCards() {
         <CardGrid
           key={JSON.stringify(search)}
           cards={visible}
-          emptyReason={cards.length === 0 ? "no-cards" : "no-matches"}
+          emptyReason={emptyReason ?? "no-cards"}
           onEdit={setEditing}
           onDelete={setDeleting}
         />

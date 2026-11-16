@@ -8,7 +8,7 @@ import {
   DropdownMenuGroup,
   DropdownMenuTrigger,
 } from "@workspace/ui/components/dropdown-menu"
-import { Label } from "@workspace/ui/components/label"
+import { Field, FieldLabel } from "@workspace/ui/components/field"
 import { Icon } from "@workspace/ui/icons"
 import { cn } from "@workspace/ui/lib/utils"
 import { useId } from "react"
@@ -74,16 +74,19 @@ export function DeckControls({
         </DropdownMenuContent>
       </DropdownMenu>
 
-      <div className="flex items-center gap-2 max-sm:col-span-3 max-sm:row-start-2">
+      <Field
+        orientation="horizontal"
+        className="w-auto max-sm:col-span-3 max-sm:row-start-2"
+      >
         <Checkbox
           id={hideId}
           checked={hideMastered}
           onCheckedChange={(checked) => onHideMasteredChange(checked === true)}
         />
-        <Label htmlFor={hideId} className="cursor-pointer">
+        <FieldLabel htmlFor={hideId} className="cursor-pointer">
           Hide Mastered
-        </Label>
-      </div>
+        </FieldLabel>
+      </Field>
 
       <Button
         variant="outline"
