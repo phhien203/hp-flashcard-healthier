@@ -1,0 +1,36 @@
+{
+  "name": "flashcard",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "turbo dev --filter=web",
+    "build": "turbo build",
+    "lint": "turbo lint",
+    "typecheck": "turbo typecheck",
+    "test": "vitest run",
+    "test:unit": "vitest run --project core --project db",
+    "test:browser": "vitest run --project ui --project storybook --project web",
+    "test:watch": "vitest",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "storybook": "pnpm --filter @workspace/ui storybook",
+    "db:generate": "pnpm --filter @workspace/db generate",
+    "db:migrate:local": "pnpm --filter web db:migrate:local",
+    "deploy": "pnpm --filter web run deploy",
+    "prepare": "husky"
+  },
+  "devDependencies": {
+    "husky": "^9.1.7",
+    "lint-staged": "^17.6.1",
+    "prettier": "^3.9.10",
+    "prettier-plugin-tailwindcss": "^0.8.1",
+    "turbo": "^2.11.11",
+    "typescript": "^6.0.2",
+    "vitest": "^5.1.0"
+  },
+  "packageManager": "pnpm@12.18.0",
+  "engines": {
+    "node": ">=22.12.0"
+  }
+}

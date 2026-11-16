@@ -1,0 +1,2 @@
+# Server-side secrets for `pnpm dev` (copy to .dev.vars). In production use `wrangler secret put`.
+CLERK_SECRET_KEY=sk_test_xxx
