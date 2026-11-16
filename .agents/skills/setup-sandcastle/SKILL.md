@@ -75,6 +75,28 @@ For each job, including secondary jobs such as explore's apply job:
 - Adapt literal `main` branch references to the target's default branch while
   preserving dynamic PR base/head refs, fork restrictions, and checkout depth.
 
+### PR creation and workflow handoffs
+
+Trace the effective credential for each checkout, push, PR creation, and label
+handoff. Checkout's token does not change `gh`'s `GH_TOKEN`. For PR creation,
+set step-level `GH_TOKEN: ${{ secrets.AGENT_PAT || secrets.GITHUB_TOKEN }}` so
+the available PAT is actually used, rather than inherited `GITHUB_TOKEN`.
+Keep job-level Contents, Issues, and Pull requests permissions scoped to need.
+
+When falling back to `GITHUB_TOKEN`, document the separate repository setting
+**Settings → Actions → General → Workflow permissions → Allow GitHub Actions to
+create and approve pull requests**. YAML `pull-requests: write` alone does not
+enable PR creation. If read-only target access is authorized, inspect
+`gh api repos/OWNER/REPO/actions/permissions/workflow`; otherwise leave an explicit
+manual prerequisite. Do not change settings or request secret values.
+
+Use `set -euo pipefail` in PR-creation shell blocks. Capture `gh pr create`
+directly, without a pipeline that can hide failure, and validate a positive PR
+number before writing step outputs. A failed or empty result must fail that step
+and prevent the review handoff. Test the actual workflow shell with mocked `gh`:
+permission denial, empty/malformed output, and success. Assert failure writes no
+PR-number output; inspect the YAML token expression separately.
+
 Configure every agent run with:
 
 ```ts
@@ -135,6 +157,8 @@ Before declaring setup complete:
   command, and branch, and ensure every runner job has its own required setup.
 - Verify published imports/types and local tsx resolution without invoking an
   agent. Run focused tests/type checks where feasible; report unavailable checks.
+- Verify PR-creation credentials and run the mocked failure/success checks from
+  “PR creation and workflow handoffs”; no remote PR or paid run is needed.
 - Dry-run the labels helper and test its idempotence with a mocked `gh`, not
   a real remote. Required label names must equal the manifest names.
 - Inspect the diff for unrelated overwrites, secrets, bare force pushes,
