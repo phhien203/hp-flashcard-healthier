@@ -40,19 +40,22 @@ export const Default: Story = {
 
 export const Invalid: Story = {
   render: () => (
-    <Field data-invalid className="w-[min(600px,90vw)]">
-      <FieldLabel htmlFor="c">Category</FieldLabel>
-      <Input
-        id="c"
-        placeholder="e.g., Geography"
-        aria-invalid
-        aria-describedby="c-error"
-      />
-      <FieldError id="c-error">
-        <Icon name="error" className="size-3.5" />
-        Please enter a category.
-      </FieldError>
-    </Field>
+    // Errors only ever appear inside the white "Create card" panel.
+    <div className="rounded-xl bg-card p-6">
+      <Field data-invalid className="w-[min(600px,90vw)]">
+        <FieldLabel htmlFor="c">Category</FieldLabel>
+        <Input
+          id="c"
+          placeholder="e.g., Geography"
+          aria-invalid
+          aria-describedby="c-error"
+        />
+        <FieldError id="c-error">
+          <Icon name="error" className="size-3.5" />
+          Please enter a category.
+        </FieldError>
+      </Field>
+    </div>
   ),
   play: async ({ canvas }) => {
     await expect(canvas.getByLabelText("Category")).toHaveAccessibleDescription(

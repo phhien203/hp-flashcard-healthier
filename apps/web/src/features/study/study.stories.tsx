@@ -62,7 +62,9 @@ export const Session: Story = {
     </section>
   ),
   play: async ({ canvas, userEvent }) => {
-    await userEvent.click(canvas.getByRole("button", { name: "Reveal answer" }))
+    await userEvent.click(
+      canvas.getByRole("button", { name: /Click to reveal answer/ })
+    )
     await waitFor(() =>
       expect(canvas.getByText("HyperText Markup Language")).toBeVisible()
     )

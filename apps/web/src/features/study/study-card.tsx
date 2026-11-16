@@ -13,7 +13,9 @@ export type StudyCardProps = {
 /**
  * The big flashcard from the Figma "Flashcard Content" component: pink while
  * showing the question, blue once the answer is revealed. The whole card is
- * one button so it works with a click, a tap, Enter or Space.
+ * one button so it works with a click, a tap, Enter or Space. Its accessible
+ * name is its visible text (question or answer); `aria-pressed` tells whether
+ * the answer side is showing.
  */
 export function StudyCard({ card, revealed, onToggle }: StudyCardProps) {
   return (
@@ -21,7 +23,6 @@ export function StudyCard({ card, revealed, onToggle }: StudyCardProps) {
       type="button"
       onClick={onToggle}
       aria-pressed={revealed}
-      aria-label={revealed ? "Show question" : "Reveal answer"}
       className={cn(
         "relative flex h-[300px] w-full cursor-pointer flex-col items-center gap-4 overflow-hidden rounded-xl border-2 border-border p-6 text-foreground shadow-hard-2 focus-ring transition-[background-color,translate,box-shadow] duration-200 ease-out-strong select-none active:translate-x-px active:translate-y-px active:shadow-hard-1 sm:h-[360px]",
         revealed ? "bg-blue-400" : "bg-pink-400"

@@ -49,7 +49,7 @@ describe("StudySession", () => {
       .element(screen.getByText("Click to reveal answer"))
       .toBeVisible()
 
-    await screen.getByRole("button", { name: "Reveal answer" }).click()
+    await screen.getByRole("button", { name: /Click to reveal answer/ }).click()
 
     await expect
       .element(screen.getByText("HyperText Markup Language"))
@@ -93,7 +93,7 @@ describe("StudySession", () => {
 
   it("hides the answer again when moving to another card", async () => {
     const { screen } = await renderSession()
-    await screen.getByRole("button", { name: "Reveal answer" }).click()
+    await screen.getByRole("button", { name: /Click to reveal answer/ }).click()
     await screen.getByRole("button", { name: "Next" }).click()
 
     await expect
@@ -139,7 +139,7 @@ describe("StudySession", () => {
 
   it("shows the question of a card that slides into the slot of a revealed one", async () => {
     const { screen } = await renderSession()
-    await screen.getByRole("button", { name: "Reveal answer" }).click()
+    await screen.getByRole("button", { name: /Click to reveal answer/ }).click()
 
     // e.g. "I Know This" mastered the card while "Hide Mastered" is on
     await screen.rerender(
