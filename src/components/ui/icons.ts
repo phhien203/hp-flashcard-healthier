@@ -1,0 +1,26 @@
+/** Icons exported from the Figma file (src/assets/icons). */
+export { default as angleDown } from "../../assets/icons/angle-down.svg";
+export { default as angleLeft } from "../../assets/icons/angle-left.svg";
+export { default as angleRight } from "../../assets/icons/angle-right.svg";
+export { default as brainSolid } from "../../assets/icons/brain-solid.svg";
+export { default as checkCircle } from "../../assets/icons/check-circle.svg";
+export { default as checkboxChecked } from "../../assets/icons/checkbox-checked.svg";
+export { default as circlePlus } from "../../assets/icons/circle-plus.svg";
+export { default as close } from "../../assets/icons/close.svg";
+export { default as closeToast } from "../../assets/icons/close-toast.svg";
+export { default as dots } from "../../assets/icons/dots.svg";
+export { default as edit } from "../../assets/icons/edit.svg";
+export { default as error } from "../../assets/icons/error.svg";
+export { default as logoCards } from "../../assets/icons/logo-cards.svg";
+export { default as logoTitle } from "../../assets/icons/logo-title.svg";
+export { default as pattern } from "../../assets/icons/pattern.svg";
+export { default as shuffle } from "../../assets/icons/shuffle.svg";
+export { default as sparkleBlue } from "../../assets/icons/sparkle-blue.svg";
+export { default as sparklePink } from "../../assets/icons/sparkle-pink.svg";
+export { default as sparkleYellow } from "../../assets/icons/sparkle-yellow.svg";
+export { default as statInProgress } from "../../assets/icons/stat-in-progress.svg";
+export { default as statMastered } from "../../assets/icons/stat-mastered.svg";
+export { default as statNotStarted } from "../../assets/icons/stat-not-started.svg";
+export { default as statTotal } from "../../assets/icons/stat-total.svg";
+export { default as trash } from "../../assets/icons/trash.svg";
+export { default as undo } from "../../assets/icons/undo.svg";
