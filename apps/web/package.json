@@ -8,11 +8,12 @@
     "build": "vite build",
     "preview": "vite preview",
     "deploy": "pnpm run build && wrangler deploy",
+    "postinstall": "wrangler types",
     "cf-typegen": "wrangler types",
     "db:migrate:local": "wrangler d1 migrations apply flashcard --local",
     "db:migrate:remote": "wrangler d1 migrations apply flashcard --remote",
     "lint": "eslint",
-    "typecheck": "wrangler types && tsc --noEmit"
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@clerk/tanstack-react-start": "^1.7.13",

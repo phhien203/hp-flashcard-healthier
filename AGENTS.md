@@ -32,4 +32,6 @@ Conventions and gotchas that the code and config don't spell out. Scripts live i
 
 ## Commands with a twist
 
+- `apps/web/worker-configuration.d.ts` (the `env` bindings and the `cloudflare:workers` module types) is generated and gitignored. `pnpm install` creates it; after editing `wrangler.jsonc`, rerun `pnpm --filter web cf-typegen`.
+
 - `deploy` collides with pnpm's built-in `pnpm deploy`, so call it as `pnpm --filter web run deploy`.
