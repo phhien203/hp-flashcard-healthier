@@ -113,6 +113,29 @@ describe("StudySession", () => {
     expect(instant.className).not.toContain("animate-in")
   })
 
+  it("fades the answer in on a pointer reveal but flips instantly for Enter/Space", async () => {
+    const { screen } = await renderSession()
+
+    // Clicking the card animates the answer swapping in.
+    await screen.getByRole("button", { name: /Click to reveal answer/ }).click()
+    const animated = screen
+      .getByText("HyperText Markup Language")
+      .element()
+      .closest("div")!
+    expect(animated.className).toContain("animate-in")
+
+    // Re-key the card and reveal it from the keyboard: Enter fires a click with
+    // detail 0, so the answer changes instantly with no enter animation.
+    await screen.getByRole("button", { name: "Next" }).click()
+    const card = screen
+      .getByRole("button", { name: /Click to reveal answer/ })
+      .element() as HTMLElement
+    card.focus()
+    await userEvent.keyboard("{Enter}")
+    const instant = screen.getByText("Paris").element().closest("div")!
+    expect(instant.className).not.toContain("animate-in")
+  })
+
   it("hides the answer again when moving to another card", async () => {
     const { screen } = await renderSession()
     await screen.getByRole("button", { name: /Click to reveal answer/ }).click()
