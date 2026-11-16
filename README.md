@@ -78,6 +78,13 @@ The Husky pre-commit hook runs Prettier on staged files, then the typecheck and 
 
 `.github/workflows/deploy.yml` automates steps 3–4 on every push to `main` once you set the repository variable `DEPLOY_ENABLED=true` and the secrets `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID` and `VITE_CLERK_PUBLISHABLE_KEY`.
 
+## Agent automation
+
+Sandcastle's five label-driven workflows are documented in
+[`.sandcastle/README.md`](.sandcastle/README.md), including secrets, permissions,
+and the risks of running agents directly on the host with `noSandbox()`.
+Preview required labels offline with `pnpm sandcastle:labels --dry-run`.
+
 ## Design decisions
 
 - **Server as source of truth, optimistic UI.** The whole deck loads in one query, prefetched during SSR. "I Know This", "Reset Progress" and Delete update the cache instantly using the same `applyProgress` rule the server runs, and roll back with a toast if the request fails.
