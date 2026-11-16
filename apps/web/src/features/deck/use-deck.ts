@@ -1,7 +1,7 @@
 import React from "react"
 
 import { useSuspenseQuery } from "@tanstack/react-query"
-import { getRouteApi } from "@tanstack/react-router"
+import { getRouteApi, useNavigate } from "@tanstack/react-router"
 
 import {
   deckEmptyReason,
@@ -25,7 +25,7 @@ const appRoute = getRouteApi("/_app")
 export function useDeck() {
   const { data: cards } = useSuspenseQuery(cardsQueryOptions)
   const search = appRoute.useSearch()
-  const navigate = appRoute.useNavigate()
+  const navigate = useNavigate()
 
   const view = React.useMemo(() => toDeckView(search), [search])
   const visible = React.useMemo(() => selectCards(cards, view), [cards, view])
