@@ -1,9 +1,10 @@
 import {
-  Outlet,
   createFileRoute,
+  Outlet,
   redirect,
   retainSearchParams,
 } from "@tanstack/react-router"
+
 import { AppHeader } from "@/features/app-shell/app-header"
 import { Page } from "@/features/app-shell/page"
 import { cardsQueryOptions } from "@/lib/cards-query"

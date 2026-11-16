@@ -1,4 +1,5 @@
 import React from "react"
+
 import { cn } from "@workspace/ui/lib/utils"
 
 /** Text field from the Figma "Input" component (default, focus and error states). */
@@ -16,4 +17,4 @@ function Input({ className, type, ...props }: React.ComponentProps<"input">) {
   )
 }
 
-export { Input, controlClassName }
+export { controlClassName, Input }

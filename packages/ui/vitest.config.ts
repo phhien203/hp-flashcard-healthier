@@ -1,4 +1,5 @@
 import { defineProject, mergeConfig } from "vitest/config"
+
 import { browser, shared } from "./vitest.shared.ts"
 
 /** Component specs for the design system, in Chromium. */

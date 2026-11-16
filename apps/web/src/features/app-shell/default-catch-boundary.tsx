@@ -1,5 +1,6 @@
 import { useQueryErrorResetBoundary } from "@tanstack/react-query"
-import { useRouter, type ErrorComponentProps } from "@tanstack/react-router"
+import { type ErrorComponentProps, useRouter } from "@tanstack/react-router"
+
 import { Button } from "@workspace/ui/components/button"
 import {
   Empty,

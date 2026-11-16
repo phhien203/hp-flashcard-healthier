@@ -1,6 +1,8 @@
-import { storybookTest } from "@storybook/addon-vitest/vitest-plugin"
 import { fileURLToPath } from "node:url"
+
+import { storybookTest } from "@storybook/addon-vitest/vitest-plugin"
 import { defineProject, mergeConfig } from "vitest/config"
+
 import { browser, shared } from "./vitest.shared.ts"
 
 /** Every story becomes a test: it must render, pass its play function and pass axe. */

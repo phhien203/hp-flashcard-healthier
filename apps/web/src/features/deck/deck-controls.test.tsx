@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from "vitest"
 import { page } from "vitest/browser"
 import { render } from "vitest-browser-react"
+
 import { DeckControls, type DeckControlsProps } from "./deck-controls"
 
 async function renderControls(props: Partial<DeckControlsProps> = {}) {

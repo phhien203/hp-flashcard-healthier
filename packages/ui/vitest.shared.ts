@@ -1,7 +1,9 @@
+import { fileURLToPath } from "node:url"
+
 import tailwindcss from "@tailwindcss/vite"
 import react from "@vitejs/plugin-react"
 import { playwright } from "@vitest/browser-playwright"
-import { fileURLToPath } from "node:url"
+
 import type { ViteUserConfig } from "vitest/config"
 
 /** Real headless Chromium via Playwright for every browser-mode project. */

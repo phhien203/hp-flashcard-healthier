@@ -1,6 +1,8 @@
-import { STARTER_DECK, getStats } from "@workspace/core"
 import { beforeEach, describe, expect, it } from "vitest"
-import { createCardRepository, type CardRepository } from "./index"
+
+import { getStats, STARTER_DECK } from "@workspace/core"
+
+import { type CardRepository, createCardRepository } from "./index"
 import { createTestDb } from "./test-db"
 
 const newCard = {

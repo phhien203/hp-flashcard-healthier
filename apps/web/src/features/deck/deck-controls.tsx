@@ -1,3 +1,5 @@
+import React from "react"
+
 import type { CategoryCount } from "@workspace/core"
 import { Button } from "@workspace/ui/components/button"
 import { Checkbox } from "@workspace/ui/components/checkbox"
@@ -11,7 +13,6 @@ import {
 import { Field, FieldLabel } from "@workspace/ui/components/field"
 import { Icon } from "@workspace/ui/icons"
 import { cn } from "@workspace/ui/lib/utils"
-import React from "react"
 
 export type DeckControlsProps = {
   categories: ReadonlyArray<CategoryCount>

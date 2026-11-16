@@ -4,7 +4,6 @@
  * intrinsic Figma size via the `width`/`height` below.
  */
 import React from "react"
-import { cn } from "@workspace/ui/lib/utils"
 
 import angleDownUrl from "@workspace/ui/assets/icons/angle-down.svg"
 import angleLeftUrl from "@workspace/ui/assets/icons/angle-left.svg"
@@ -13,8 +12,8 @@ import brainSolidUrl from "@workspace/ui/assets/icons/brain-solid.svg"
 import checkCircleUrl from "@workspace/ui/assets/icons/check-circle.svg"
 import checkboxCheckedUrl from "@workspace/ui/assets/icons/checkbox-checked.svg"
 import circlePlusUrl from "@workspace/ui/assets/icons/circle-plus.svg"
-import closeUrl from "@workspace/ui/assets/icons/close.svg"
 import closeToastUrl from "@workspace/ui/assets/icons/close-toast.svg"
+import closeUrl from "@workspace/ui/assets/icons/close.svg"
 import dotsUrl from "@workspace/ui/assets/icons/dots.svg"
 import editUrl from "@workspace/ui/assets/icons/edit.svg"
 import errorUrl from "@workspace/ui/assets/icons/error.svg"
@@ -31,6 +30,7 @@ import statNotStartedUrl from "@workspace/ui/assets/icons/stat-not-started.svg"
 import statTotalUrl from "@workspace/ui/assets/icons/stat-total.svg"
 import trashUrl from "@workspace/ui/assets/icons/trash.svg"
 import undoUrl from "@workspace/ui/assets/icons/undo.svg"
+import { cn } from "@workspace/ui/lib/utils"
 
 const icons = {
   "angle-down": { src: angleDownUrl, width: 16, height: 16 },

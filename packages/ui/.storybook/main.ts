@@ -1,5 +1,6 @@
-import type { StorybookConfig } from "@storybook/react-vite"
 import tailwindcss from "@tailwindcss/vite"
+
+import type { StorybookConfig } from "@storybook/react-vite"
 
 const config: StorybookConfig = {
   framework: "@storybook/react-vite",

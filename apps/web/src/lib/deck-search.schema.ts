@@ -1,5 +1,6 @@
-import { CARD_LIMITS, type DeckView } from "@workspace/core"
 import { z } from "zod"
+
+import { CARD_LIMITS, type DeckView } from "@workspace/core"
 
 /**
  * Deck filters live in the URL (`?categories=…&hideMastered=true&shuffle=123`)

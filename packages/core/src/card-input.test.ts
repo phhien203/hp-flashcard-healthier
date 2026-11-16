@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest"
+
 import { CARD_LIMITS, cardInputSchema } from "./index"
 
 const errorsFor = (input: unknown) => {

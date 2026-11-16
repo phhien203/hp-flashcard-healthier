@@ -1,5 +1,7 @@
 import React from "react"
+
 import { Progress as ProgressPrimitive } from "radix-ui"
+
 import { cn } from "@workspace/ui/lib/utils"
 
 /** 60px outlined progress bar from the Figma "Progress Bar" component. */

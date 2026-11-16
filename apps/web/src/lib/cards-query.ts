@@ -1,4 +1,3 @@
-import { applyProgress, type Card, type CardInput } from "@workspace/core"
 import {
   queryOptions,
   useMutation,
@@ -6,6 +5,9 @@ import {
 } from "@tanstack/react-query"
 import { useServerFn } from "@tanstack/react-start"
 import { toast } from "sonner"
+
+import { applyProgress, type Card, type CardInput } from "@workspace/core"
+
 import {
   createCard,
   deleteCard,
@@ -13,6 +15,7 @@ import {
   recordProgress,
   updateCard,
 } from "./cards.functions"
+
 import type { RecordProgressVars, UpdateCardVars } from "./cards.schema"
 
 /** The signed-in user's whole deck. Decks are small, so it is loaded in one go. */

@@ -1,9 +1,12 @@
-import type { Meta, StoryObj } from "@storybook/react-vite"
-import { STARTER_DECK, type Card } from "@workspace/core"
 import { expect, fn } from "storybook/test"
+
+import { type Card, STARTER_DECK } from "@workspace/core"
+
 import { CardForm } from "./card-form"
 import { CardGrid } from "./card-grid"
 import { CardTile } from "./card-tile"
+
+import type { Meta, StoryObj } from "@storybook/react-vite"
 
 const deck: Card[] = STARTER_DECK.map((card, i) => ({
   ...card,

@@ -1,4 +1,3 @@
-import type { Meta, StoryObj } from "@storybook/react-vite"
 import { Button } from "@workspace/ui/components/button"
 import {
   Empty,
@@ -7,6 +6,8 @@ import {
   EmptyHeader,
   EmptyTitle,
 } from "@workspace/ui/components/empty"
+
+import type { Meta, StoryObj } from "@storybook/react-vite"
 
 const meta = {
   title: "Components/Empty",

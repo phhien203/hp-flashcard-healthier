@@ -1,4 +1,4 @@
-import { cardStatus, type Card } from "./card"
+import { type Card, cardStatus } from "./card"
 
 export type Stats = {
   total: number

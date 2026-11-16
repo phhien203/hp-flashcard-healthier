@@ -1,5 +1,7 @@
 import React from "react"
+
 import { Checkbox as CheckboxPrimitive } from "radix-ui"
+
 import { Icon } from "@workspace/ui/icons"
 import { cn } from "@workspace/ui/lib/utils"
 

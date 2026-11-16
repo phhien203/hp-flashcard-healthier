@@ -1,3 +1,5 @@
+import React from "react"
+
 import type { Card, EmptyReason } from "@workspace/core"
 import { Button } from "@workspace/ui/components/button"
 import {
@@ -6,7 +8,7 @@ import {
   EmptyHeader,
   EmptyTitle,
 } from "@workspace/ui/components/empty"
-import React from "react"
+
 import { CardTile, type CardTileProps } from "./card-tile"
 
 export const PAGE_SIZE = 12
