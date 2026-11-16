@@ -82,14 +82,20 @@ No application build is required just to execute these published-package scripts
    read/write (or classic `repo` where required). Its owner must have repository
    access. If agents must modify workflow files, separately review the necessary
    workflow-edit permission; do not broaden permissions unnecessarily.
-4. Allow Actions and GitHub Actions to create PRs in repository settings. Job
-   `GITHUB_TOKEN` permissions are declared in YAML: explore read-only, apply
+4. Allow Actions. If PR creation falls back to `GITHUB_TOKEN`, enable
+   **Settings → Actions → General → Workflow permissions → Allow GitHub Actions
+   to create and approve pull requests**. YAML write permissions alone do not
+   enable this. Inspect it read-only with
+   `gh api repos/phhien203/hp-flashcard-healthier/actions/permissions/workflow`.
+   Job `GITHUB_TOKEN` permissions are declared in YAML: explore read-only, apply
    Issues write, mutation jobs Contents and Pull requests write (issue implement
    also Issues write).
 5. Run the label initializer yourself, then deliberately apply trigger labels.
    Labels added with `GITHUB_TOKEN` generally do **not** trigger another workflow.
    `AGENT_PAT` is used for explore→implement and implement→review handoffs and
-   issue-branch checkout/push; otherwise manually remove/re-add the next label.
+   issue-branch checkout/push and draft PR creation; otherwise manually
+   remove/re-add the next label. PR creation fails immediately on API errors or
+   invalid output, before requesting review.
    Other PR mutation pushes use `GITHUB_TOKEN`, so CI may need a manual rerun.
 
 No secrets, remote labels, or paid agent runs were configured by this setup.

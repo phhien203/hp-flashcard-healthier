@@ -15,7 +15,9 @@
         "The required label manifest includes ready-for-human and exactly the workflow and helper labels.",
         "A developer label command dry-runs offline and creates only missing labels under mocked gh, preserving existing metadata.",
         "Default-branch references use trunk and no bare force push remains.",
-        "Documentation records upstream SHA, required secrets, token chaining limitations, and noSandbox risks."
+        "Documentation records upstream SHA, required secrets, token chaining limitations, and noSandbox risks.",
+        "PR creation explicitly prefers AGENT_PAT with GITHUB_TOKEN fallback; documentation distinguishes YAML permissions from the repository create-PR setting.",
+        "Mocked execution of the actual PR-creation shell rejects permission denial and empty/malformed output without publishing a PR number, and publishes the correct number on success."
       ]
     },
     {
@@ -32,7 +34,9 @@
         "The required label manifest includes ready-for-human and exactly the workflow and helper labels.",
         "A developer label command dry-runs offline and creates only missing labels under mocked gh, preserving existing metadata.",
         "Default-branch references use develop; branch updates implement rebase continuation and lease-protected pushes, without merge commits or bare force.",
-        "Documentation records upstream SHA, required secrets, token chaining limitations, and noSandbox risks."
+        "Documentation records upstream SHA, required secrets, token chaining limitations, and noSandbox risks.",
+        "PR creation explicitly prefers AGENT_PAT with GITHUB_TOKEN fallback; documentation distinguishes YAML permissions from the repository create-PR setting.",
+        "Mocked execution of the actual PR-creation shell rejects permission denial and empty/malformed output without publishing a PR number, and publishes the correct number on success."
       ]
     }
   ]

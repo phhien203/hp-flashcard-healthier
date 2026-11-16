@@ -34,6 +34,18 @@ runs so changes to upstream don't confound the comparison. Allow package
 installation and read-only upstream access, but prohibit target remote mutation,
 secret changes, pushes, and agent execution.
 
+For both fixtures, include a PR-creation step inheriting job-level `GITHUB_TOKEN`
+and piping `gh pr create` to `tail -n1` without `pipefail`. Assume `AGENT_PAT`
+is available but the repository create-PR setting is disabled. Check that setup
+corrects the effective PR-creation token, documents the fallback prerequisite,
+and tests the shell offline with denied, empty, malformed, and successful `gh`
+responses. Failed creation must not publish a PR-number output.
+The target repository's regression example runs with:
+
+```sh
+node --test .sandcastle/tests/open-pr.test.mjs
+```
+
 Keep generated repositories and `node_modules` outside the skill. Each run
 should produce a review summary, its changed files, validation evidence, and
 honest timing data. Grade the expectations in `evals.json` against files and
