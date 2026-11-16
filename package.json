@@ -18,13 +18,20 @@
     "db:generate": "pnpm --filter @workspace/db generate",
     "db:migrate:local": "pnpm --filter web db:migrate:local",
     "deploy": "pnpm --filter web run deploy",
-    "prepare": "husky"
+    "prepare": "husky",
+    "sandcastle:labels": "node scripts/sandcastle-labels.mjs",
+    "sandcastle:typecheck": "tsc -p .sandcastle/tsconfig.json",
+    "sandcastle:test": "node --import tsx --test .sandcastle/tests/*.test.mjs"
   },
   "devDependencies": {
+    "@ai-hero/sandcastle": "^0.14.0",
+    "@standard-schema/spec": "^1.1.0",
+    "@types/node": "^22.20.5",
     "husky": "^9.1.7",
     "lint-staged": "^17.6.1",
     "prettier": "^3.9.10",
     "prettier-plugin-tailwindcss": "^0.8.1",
+    "tsx": "^4.23.15",
     "turbo": "^2.11.11",
     "typescript": "^6.0.2",
     "vitest": "^5.1.0"

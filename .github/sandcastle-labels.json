@@ -1,0 +1,37 @@
+[
+  {
+    "name": "agent:explore",
+    "color": "0E8A16",
+    "description": "Run the exploration triage agent workflow"
+  },
+  {
+    "name": "agent:implement",
+    "color": "0E8A16",
+    "description": "Run the implementation agent workflow"
+  },
+  {
+    "name": "agent:review",
+    "color": "0E8A16",
+    "description": "Run the automated agent review workflow"
+  },
+  {
+    "name": "agent:update-branch",
+    "color": "0E8A16",
+    "description": "Request rebase of a same-repository PR onto its base"
+  },
+  {
+    "name": "agent:in-progress",
+    "color": "FBCA04",
+    "description": "Agent workflow is currently running"
+  },
+  {
+    "name": "agent:blocked",
+    "color": "D73A4A",
+    "description": "Agent workflow is blocked or failed"
+  },
+  {
+    "name": "ready-for-human",
+    "color": "c2e0c6",
+    "description": "Requires human implementation"
+  }
+]
