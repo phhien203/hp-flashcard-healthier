@@ -54,6 +54,7 @@
   "exports": {
     "./globals.css": "./src/styles/globals.css",
     "./lib/*": "./src/lib/*.ts",
+    "./assets/*": "./src/assets/*",
     "./components/*": "./src/components/*.tsx",
     "./icons": "./src/icons/index.tsx"
   }

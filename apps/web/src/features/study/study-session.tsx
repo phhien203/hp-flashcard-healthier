@@ -14,7 +14,7 @@ import {
 } from "@workspace/ui/components/empty"
 import { Separator } from "@workspace/ui/components/separator"
 import { Icon } from "@workspace/ui/icons"
-import { useEffect, useState } from "react"
+import React from "react"
 import { StudyCard } from "./study-card"
 
 export type StudySessionProps = {
@@ -37,10 +37,10 @@ export function StudySession({
   onProgress,
   emptyAction,
 }: StudySessionProps) {
-  const [position, setPosition] = useState(0)
+  const [position, setPosition] = React.useState(0)
   // Remember which card is flipped rather than a boolean, so a card that slides
   // into the slot (the previous one was mastered or deleted) starts on its question.
-  const [revealedId, setRevealedId] = useState<string | null>(null)
+  const [revealedId, setRevealedId] = React.useState<string | null>(null)
 
   // If the current card leaves the list (mastered while "Hide Mastered" is on,
   // or deleted), the next card slides into its slot; clamp at the end.
@@ -53,7 +53,7 @@ export function StudySession({
     setRevealedId(null)
   }
 
-  useEffect(() => {
+  React.useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
       if (
         event.defaultPrevented ||

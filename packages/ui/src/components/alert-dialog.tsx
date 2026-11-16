@@ -1,6 +1,6 @@
 "use client"
 
-import * as React from "react"
+import React from "react"
 import { cn } from "@workspace/ui/lib/utils"
 import { AlertDialog as AlertDialogPrimitive } from "radix-ui"
 

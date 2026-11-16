@@ -12,7 +12,7 @@ import { Spinner } from "@workspace/ui/components/spinner"
 import { Textarea } from "@workspace/ui/components/textarea"
 import { Icon, type IconName } from "@workspace/ui/icons"
 import { cn } from "@workspace/ui/lib/utils"
-import { useId } from "react"
+import React from "react"
 
 const EMPTY: CardInput = { question: "", answer: "", category: "" }
 
@@ -55,7 +55,7 @@ export function CardForm({
   resetOnSuccess = false,
   actionsClassName,
 }: CardFormProps) {
-  const idPrefix = useId()
+  const idPrefix = React.useId()
   const form = useForm({
     defaultValues,
     validationLogic: revalidateLogic({

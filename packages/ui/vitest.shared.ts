@@ -17,6 +17,8 @@ export const shared: ViteUserConfig = {
   // Fonts and other assets live in the workspace's pnpm store, outside this package.
   server: { fs: { allow: ["../.."] } },
   resolve: {
+    // Web feature stories resolve "@/" through apps/web/tsconfig.json.
+    tsconfigPaths: true,
     alias: {
       "@workspace/ui": fileURLToPath(new URL("./src", import.meta.url)),
     },

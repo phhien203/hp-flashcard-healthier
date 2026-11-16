@@ -2,7 +2,7 @@ import type { Card } from "@workspace/core"
 import { Badge } from "@workspace/ui/components/badge"
 import { Icon } from "@workspace/ui/icons"
 import { cn } from "@workspace/ui/lib/utils"
-import { CardProgress } from "../deck/card-progress"
+import { CardProgress } from "@/features/deck/card-progress"
 
 export type StudyCardProps = {
   card: Card

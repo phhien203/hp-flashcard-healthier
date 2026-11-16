@@ -1,19 +1,12 @@
 import type { Card } from "@workspace/core"
 import { createFileRoute } from "@tanstack/react-router"
-import { useState } from "react"
-import { CardForm } from "../../features/cards/card-form"
-import { CardGrid } from "../../features/cards/card-grid"
-import {
-  DeleteCardDialog,
-  EditCardDialog,
-} from "../../features/cards/card-dialogs"
-import { DeckControls } from "../../features/deck/deck-controls"
-import { useDeck } from "../../features/deck/use-deck"
-import {
-  useCreateCard,
-  useDeleteCard,
-  useUpdateCard,
-} from "../../lib/cards-query"
+import React from "react"
+import { CardForm } from "@/features/cards/card-form"
+import { CardGrid } from "@/features/cards/card-grid"
+import { DeleteCardDialog, EditCardDialog } from "@/features/cards/card-dialogs"
+import { DeckControls } from "@/features/deck/deck-controls"
+import { useDeck } from "@/features/deck/use-deck"
+import { useCreateCard, useDeleteCard, useUpdateCard } from "@/lib/cards-query"
 
 export const Route = createFileRoute("/_app/cards")({
   head: () => ({ meta: [{ title: "All Cards · Flashcard" }] }),
@@ -25,8 +18,8 @@ function AllCards() {
   const create = useCreateCard()
   const update = useUpdateCard()
   const remove = useDeleteCard()
-  const [editing, setEditing] = useState<Card | null>(null)
-  const [deleting, setDeleting] = useState<Card | null>(null)
+  const [editing, setEditing] = React.useState<Card | null>(null)
+  const [deleting, setDeleting] = React.useState<Card | null>(null)
 
   return (
     <>

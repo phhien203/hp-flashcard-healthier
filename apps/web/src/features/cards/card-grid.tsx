@@ -6,7 +6,7 @@ import {
   EmptyHeader,
   EmptyTitle,
 } from "@workspace/ui/components/empty"
-import { useState } from "react"
+import React from "react"
 import { CardTile, type CardTileProps } from "./card-tile"
 
 export const PAGE_SIZE = 12
@@ -39,7 +39,7 @@ export function CardGrid({
   onEdit,
   onDelete,
 }: CardGridProps) {
-  const [limit, setLimit] = useState(PAGE_SIZE)
+  const [limit, setLimit] = React.useState(PAGE_SIZE)
 
   if (cards.length === 0) {
     return (

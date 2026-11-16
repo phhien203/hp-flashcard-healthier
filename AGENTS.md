@@ -1,6 +1,11 @@
 # Flashcard monorepo: agent notes
 
-Conventions and gotchas that the code and config don't spell out. Scripts live in the root `package.json`; layout and setup live in `README.md`.
+Conventions and gotchas that the code and config don't spell out. Scripts live in the root `package.json`; layout and setup live in `README.md`. Follow `CODING_STANDARDS.md` (rebase-only history, `@` alias imports, `React.` namespace).
+
+## Import aliases
+
+- `apps/web` maps `@/*` to `src/*` (tsconfig `paths`, resolved by Vite's `resolve.tsconfigPaths`). Storybook and the `ui`/`storybook` Vitest projects enable `tsconfigPaths` too, so web feature stories resolve `@/` through `apps/web/tsconfig.json`.
+- `packages/ui` imports itself as `@workspace/ui/*`. Same-directory imports stay relative (`./card-form`); anything that would need `../` uses an alias. `routeTree.gen.ts` is generated and keeps its relative paths.
 
 ## Boundaries
 

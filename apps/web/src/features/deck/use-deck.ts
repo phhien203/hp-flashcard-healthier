@@ -7,9 +7,9 @@ import {
 } from "@workspace/core"
 import { useSuspenseQuery } from "@tanstack/react-query"
 import { getRouteApi } from "@tanstack/react-router"
-import { useMemo } from "react"
-import { cardsQueryOptions } from "../../lib/cards-query"
-import { toDeckView, type DeckSearch } from "../../lib/deck-search.schema"
+import React from "react"
+import { cardsQueryOptions } from "@/lib/cards-query"
+import { toDeckView, type DeckSearch } from "@/lib/deck-search.schema"
 import type { DeckControlsProps } from "./deck-controls"
 
 const appRoute = getRouteApi("/_app")
@@ -23,11 +23,14 @@ export function useDeck() {
   const search = appRoute.useSearch()
   const navigate = appRoute.useNavigate()
 
-  const view = useMemo(() => toDeckView(search), [search])
-  const visible = useMemo(() => selectCards(cards, view), [cards, view])
-  const emptyReason = useMemo(() => deckEmptyReason(cards, view), [cards, view])
-  const stats = useMemo(() => getStats(cards), [cards])
-  const categories = useMemo(() => {
+  const view = React.useMemo(() => toDeckView(search), [search])
+  const visible = React.useMemo(() => selectCards(cards, view), [cards, view])
+  const emptyReason = React.useMemo(
+    () => deckEmptyReason(cards, view),
+    [cards, view]
+  )
+  const stats = React.useMemo(() => getStats(cards), [cards])
+  const categories = React.useMemo(() => {
     const counts = getCategoryCounts(cards)
     // A selected category whose last card was edited or deleted stays listed
     // (with 0) so it can still be unticked.
