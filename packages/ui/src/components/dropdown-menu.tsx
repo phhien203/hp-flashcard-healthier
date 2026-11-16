@@ -1,4 +1,4 @@
-import * as React from "react"
+import React from "react"
 import { cn } from "@workspace/ui/lib/utils"
 import { Icon } from "@workspace/ui/icons"
 import { DropdownMenu as DropdownMenuPrimitive } from "radix-ui"

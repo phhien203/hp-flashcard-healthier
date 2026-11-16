@@ -4,10 +4,10 @@ import {
   redirect,
   retainSearchParams,
 } from "@tanstack/react-router"
-import { AppHeader } from "../features/app-shell/app-header"
-import { Page } from "../features/app-shell/page"
-import { cardsQueryOptions } from "../lib/cards-query"
-import { deckSearchSchema } from "../lib/deck-search.schema"
+import { AppHeader } from "@/features/app-shell/app-header"
+import { Page } from "@/features/app-shell/page"
+import { cardsQueryOptions } from "@/lib/cards-query"
+import { deckSearchSchema } from "@/lib/deck-search.schema"
 
 /** Signed-in area: Study Mode and All Cards share the header and deck filters. */
 export const Route = createFileRoute("/_app")({

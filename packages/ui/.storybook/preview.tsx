@@ -1,5 +1,5 @@
 import type { Preview } from "@storybook/react-vite"
-import "../src/styles/globals.css"
+import "@workspace/ui/styles/globals.css"
 
 const preview: Preview = {
   // Wait for Poppins so stories render with real metrics and axe's contrast

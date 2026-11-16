@@ -16,6 +16,8 @@ const config: StorybookConfig = {
   core: { disableTelemetry: true },
   viteFinal: async (viteConfig) => {
     viteConfig.plugins = [...(viteConfig.plugins ?? []), tailwindcss()]
+    // Web feature stories resolve "@/" through apps/web/tsconfig.json.
+    viteConfig.resolve = { ...viteConfig.resolve, tsconfigPaths: true }
     return viteConfig
   },
 }

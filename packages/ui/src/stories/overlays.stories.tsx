@@ -29,7 +29,7 @@ import {
 } from "@workspace/ui/components/dropdown-menu"
 import { Toaster } from "@workspace/ui/components/sonner"
 import { Icon } from "@workspace/ui/icons"
-import { useState } from "react"
+import React from "react"
 import { toast } from "sonner"
 
 const meta = { title: "Components/Overlays" } satisfies Meta
@@ -108,7 +108,7 @@ const CATEGORIES = [
 ] as const
 
 function CategoryMenu() {
-  const [selected, setSelected] = useState<string[]>(["CSS"])
+  const [selected, setSelected] = React.useState<string[]>(["CSS"])
   return (
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>

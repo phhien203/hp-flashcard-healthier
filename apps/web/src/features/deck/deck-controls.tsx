@@ -11,7 +11,7 @@ import {
 import { Field, FieldLabel } from "@workspace/ui/components/field"
 import { Icon } from "@workspace/ui/icons"
 import { cn } from "@workspace/ui/lib/utils"
-import { useId } from "react"
+import React from "react"
 
 export type DeckControlsProps = {
   categories: ReadonlyArray<CategoryCount>
@@ -33,7 +33,7 @@ export function DeckControls({
   onShuffle,
   className,
 }: DeckControlsProps) {
-  const hideId = useId()
+  const hideId = React.useId()
   const selected = new Set(selectedCategories)
 
   return (

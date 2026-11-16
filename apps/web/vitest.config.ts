@@ -6,6 +6,7 @@ import { defineProject } from "vitest/config"
 /** Feature components of the web app, rendered in headless Chromium. */
 export default defineProject({
   plugins: [react(), tailwindcss()],
+  resolve: { tsconfigPaths: true },
   // Fonts and other assets live in the workspace's pnpm store, outside this package.
   server: { fs: { allow: ["../.."] } },
   test: {

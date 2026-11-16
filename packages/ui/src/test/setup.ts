@@ -1,4 +1,4 @@
-import "../styles/globals.css"
+import "@workspace/ui/styles/globals.css"
 
 // Load every Poppins weight before the first test so text has real metrics
 // and nothing reflows when the web font swaps in mid-test.

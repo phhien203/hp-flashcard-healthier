@@ -1,11 +1,11 @@
 import { Link, createFileRoute } from "@tanstack/react-router"
 import { Button } from "@workspace/ui/components/button"
 import { Separator } from "@workspace/ui/components/separator"
-import { DeckControls } from "../../features/deck/deck-controls"
-import { useDeck } from "../../features/deck/use-deck"
-import { StatsPanel } from "../../features/study/stats-panel"
-import { StudySession } from "../../features/study/study-session"
-import { useRecordProgress } from "../../lib/cards-query"
+import { DeckControls } from "@/features/deck/deck-controls"
+import { useDeck } from "@/features/deck/use-deck"
+import { StatsPanel } from "@/features/study/stats-panel"
+import { StudySession } from "@/features/study/study-session"
+import { useRecordProgress } from "@/lib/cards-query"
 
 export const Route = createFileRoute("/_app/study")({
   head: () => ({ meta: [{ title: "Study Mode · Flashcard" }] }),

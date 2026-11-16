@@ -1,6 +1,6 @@
 import { SignIn } from "@clerk/tanstack-react-start"
 import { createFileRoute } from "@tanstack/react-router"
-import { AuthPage } from "../features/app-shell/auth-page"
+import { AuthPage } from "@/features/app-shell/auth-page"
 
 export const Route = createFileRoute("/sign-in/$")({
   head: () => ({ meta: [{ title: "Sign in · Flashcard" }] }),
