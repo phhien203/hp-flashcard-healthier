@@ -26,29 +26,37 @@ export const cardsQueryOptions = queryOptions({
   staleTime: 30_000,
 })
 
-const KEY = cardsQueryOptions.queryKey
+const DECK_KEY = cardsQueryOptions.queryKey
 
 function useDeckCache() {
   const queryClient = useQueryClient()
   return {
     /** Apply `update` to the cached deck now and return a rollback function. */
     async optimistic(update: (cards: Card[]) => Card[]) {
-      await queryClient.cancelQueries({ queryKey: KEY })
-      const previous = queryClient.getQueryData(KEY)
-      queryClient.setQueryData(KEY, (cards) => (cards ? update(cards) : cards))
-      return () => queryClient.setQueryData(KEY, previous)
+      await queryClient.cancelQueries({ queryKey: DECK_KEY })
+      const previous = queryClient.getQueryData(DECK_KEY)
+      queryClient.setQueryData(DECK_KEY, (cards) =>
+        cards ? update(cards) : cards
+      )
+      return () => queryClient.setQueryData(DECK_KEY, previous)
+    },
+    append(card: Card) {
+      queryClient.setQueryData(DECK_KEY, (cards) =>
+        cards ? [...cards, card] : [card]
+      )
     },
     replace(card: Card) {
-      queryClient.setQueryData(KEY, (cards) =>
+      queryClient.setQueryData(DECK_KEY, (cards) =>
         cards?.map((c) => (c.id === card.id ? card : c))
       )
     },
-    invalidate: () => queryClient.invalidateQueries({ queryKey: KEY }),
+    invalidate: () => queryClient.invalidateQueries({ queryKey: DECK_KEY }),
   }
 }
 
-const failed = (what: string) => () =>
+function toastFailure(what: string) {
   toast.error(`Couldn’t ${what}. Check your connection and try again.`)
+}
 
 /** "I Know This" / "Reset Progress": updates instantly, rolls back on failure. */
 export function useRecordProgress() {
@@ -67,24 +75,22 @@ export function useRecordProgress() {
       ),
     onError: (_error, _vars, rollback) => {
       rollback?.()
-      failed("save your progress")()
+      toastFailure("save your progress")
     },
     onSuccess: (card) => cache.replace(card),
   })
 }
 
 export function useCreateCard() {
-  const queryClient = useQueryClient()
+  const cache = useDeckCache()
   const create = useServerFn(createCard)
   return useMutation({
     mutationFn: (input: CardInput) => create({ data: input }),
     onSuccess: (card) => {
-      queryClient.setQueryData(KEY, (cards) =>
-        cards ? [...cards, card] : [card]
-      )
+      cache.append(card)
       toast("Card created successfully.")
     },
-    onError: failed("create the card"),
+    onError: () => toastFailure("create the card"),
   })
 }
 
@@ -98,7 +104,7 @@ export function useUpdateCard() {
       cache.replace(card)
       toast("Card updated successfully.")
     },
-    onError: failed("update the card"),
+    onError: () => toastFailure("update the card"),
   })
 }
 
@@ -111,7 +117,7 @@ export function useDeleteCard() {
       cache.optimistic((cards) => cards.filter((c) => c.id !== id)),
     onError: (_error, _id, rollback) => {
       rollback?.()
-      failed("delete the card")()
+      toastFailure("delete the card")
     },
     onSuccess: () => toast("Card deleted."),
     onSettled: () => cache.invalidate(),

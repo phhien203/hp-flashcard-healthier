@@ -105,6 +105,7 @@
   /* Hard "sticker" shadows used throughout the design */
   --shadow-hard-1: 1px 1px 0 0 var(--fc-neutral-900);
   --shadow-hard-2: 2px 2px 0 0 var(--fc-neutral-900);
+  --shadow-tab: 1px 2px 0 0 var(--fc-neutral-900);
   --shadow-error: 2px 2px 0 0 var(--fc-pink-700);
   --shadow-pop: 0 3px 8px 0 rgb(46 20 1 / 0.2);
   --shadow-toast:
@@ -167,6 +168,10 @@
 }
 
 /* Sticker panel: 1px border with a heavier bottom/right edge */
+@utility panel-edge-2 {
+  border-width: 1px 2px 2px 1px;
+  border-color: var(--border);
+}
 @utility panel-edge-3 {
   border-width: 1px 3px 3px 1px;
   border-color: var(--border);

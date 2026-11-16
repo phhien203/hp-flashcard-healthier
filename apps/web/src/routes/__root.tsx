@@ -6,6 +6,7 @@ import {
   createRootRouteWithContext,
 } from "@tanstack/react-router"
 import { Toaster } from "@workspace/ui/components/sonner"
+import { clerkAppearance, palette } from "@workspace/ui/lib/tokens"
 import appCss from "@workspace/ui/globals.css?url"
 import { fetchSession } from "../server/auth"
 
@@ -27,7 +28,7 @@ export const Route = createRootRouteWithContext<RouterContext>()({
         name: "viewport",
         content: "width=device-width, initial-scale=1, viewport-fit=cover",
       },
-      { name: "theme-color", content: "#f7f3f0" },
+      { name: "theme-color", content: palette["neutral-100"] },
       {
         name: "description",
         content: "Study with flashcards and track what you’ve mastered.",
@@ -42,22 +43,6 @@ export const Route = createRootRouteWithContext<RouterContext>()({
   }),
   shellComponent: RootDocument,
 })
-
-const clerkAppearance = {
-  variables: {
-    colorPrimary: "#f8cb46",
-    colorPrimaryForeground: "#2e1401",
-    colorForeground: "#2e1401",
-    colorMutedForeground: "#6d5b4d",
-    colorBackground: "#ffffff",
-    colorInput: "#ffffff",
-    colorBorder: "#2e1401",
-    colorDanger: "#e11966",
-    colorRing: "#5072c7",
-    fontFamily: "Poppins, ui-sans-serif, system-ui, sans-serif",
-    borderRadius: "12px",
-  },
-} as const
 
 function RootDocument({ children }: { children: React.ReactNode }) {
   return (

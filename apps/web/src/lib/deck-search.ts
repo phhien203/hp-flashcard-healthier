@@ -1,4 +1,4 @@
-import type { DeckView } from "@workspace/core"
+import { CARD_LIMITS, type DeckView } from "@workspace/core"
 import { z } from "zod"
 
 /**
@@ -7,7 +7,11 @@ import { z } from "zod"
  * Study Mode and All Cards. Invalid values are dropped rather than erroring.
  */
 export const deckSearchSchema = z.object({
-  categories: z.array(z.string().max(40)).max(50).optional().catch(undefined),
+  categories: z
+    .array(z.string().max(CARD_LIMITS.category))
+    .max(50)
+    .optional()
+    .catch(undefined),
   hideMastered: z.boolean().optional().catch(undefined),
   shuffle: z.number().int().nonnegative().optional().catch(undefined),
 })

@@ -11,7 +11,7 @@ export function ModeNav() {
   return (
     <nav
       aria-label="Mode"
-      className="flex items-center gap-1 rounded-full border border-border bg-card p-1 shadow-[1px_2px_0_0_var(--border)]"
+      className="flex items-center gap-1 rounded-full border border-border bg-card p-1 shadow-tab"
     >
       <Link to="/study" search={true} className={tabClass}>
         Study Mode

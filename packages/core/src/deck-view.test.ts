@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest"
-import { selectCards } from "./index"
+import { deckEmptyReason, selectCards } from "./index"
 import { makeCard } from "./testing"
 
 const html = makeCard({ question: "HTML?", category: "Web", knownCount: 0 })
@@ -76,5 +76,28 @@ describe("selectCards", () => {
       )
       expect(withoutThird).toEqual(shuffled.filter((q) => q !== shuffled[2]))
     })
+  })
+})
+
+describe("deckEmptyReason", () => {
+  it("is null while some card is visible", () => {
+    expect(deckEmptyReason(deck, {})).toBeNull()
+  })
+
+  it("says the deck itself is empty", () => {
+    expect(deckEmptyReason([], { hideMastered: true })).toBe("no-cards")
+  })
+
+  it("blames Hide Mastered only when it is what hides the remaining cards", () => {
+    expect(deckEmptyReason([css], { hideMastered: true })).toBe("all-mastered")
+    expect(
+      deckEmptyReason(deck, { categories: ["Web"], hideMastered: true })
+    ).toBeNull()
+  })
+
+  it("blames the category filter when no card matches it, even with Hide Mastered on", () => {
+    expect(
+      deckEmptyReason(deck, { categories: ["History"], hideMastered: true })
+    ).toBe("no-matches")
   })
 })

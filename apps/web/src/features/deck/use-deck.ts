@@ -1,4 +1,5 @@
 import {
+  deckEmptyReason,
   getCategoryCounts,
   getStats,
   newShuffleSeed,
@@ -22,12 +23,19 @@ export function useDeck() {
   const search = appRoute.useSearch()
   const navigate = appRoute.useNavigate()
 
-  const visible = useMemo(
-    () => selectCards(cards, toDeckView(search)),
-    [cards, search]
-  )
+  const view = useMemo(() => toDeckView(search), [search])
+  const visible = useMemo(() => selectCards(cards, view), [cards, view])
+  const emptyReason = useMemo(() => deckEmptyReason(cards, view), [cards, view])
   const stats = useMemo(() => getStats(cards), [cards])
-  const categories = useMemo(() => getCategoryCounts(cards), [cards])
+  const categories = useMemo(() => {
+    const counts = getCategoryCounts(cards)
+    // A selected category whose last card was edited or deleted stays listed
+    // (with 0) so it can still be unticked.
+    const stale = (search.categories ?? [])
+      .filter((name) => !counts.some((c) => c.name === name))
+      .map((name) => ({ name, count: 0 }))
+    return [...counts, ...stale]
+  }, [cards, search.categories])
 
   const setSearch = (patch: Partial<DeckSearch>) =>
     void navigate({
@@ -47,7 +55,7 @@ export function useDeck() {
     onShuffle: () => setSearch({ shuffle: newShuffleSeed() }),
   }
 
-  return { cards, visible, stats, controls, search }
+  return { cards, visible, emptyReason, stats, controls, search }
 }
 
 /** Drop default values so the URL stays clean. */

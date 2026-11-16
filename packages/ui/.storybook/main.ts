@@ -3,7 +3,11 @@ import tailwindcss from "@tailwindcss/vite"
 
 const config: StorybookConfig = {
   framework: "@storybook/react-vite",
-  stories: ["../src/**/*.stories.@(ts|tsx)"],
+  // Design-system stories plus the web app's feature components (rendered with fixture data).
+  stories: [
+    "../src/**/*.stories.@(ts|tsx)",
+    "../../../apps/web/src/features/**/*.stories.@(ts|tsx)",
+  ],
   addons: [
     "@storybook/addon-docs",
     "@storybook/addon-a11y",

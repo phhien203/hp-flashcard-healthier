@@ -1,4 +1,4 @@
-import type { Card } from "@workspace/core"
+import type { Card, EmptyReason } from "@workspace/core"
 import { Button } from "@workspace/ui/components/button"
 import {
   Empty,
@@ -11,9 +11,25 @@ import { CardTile, type CardTileProps } from "./card-tile"
 
 export const PAGE_SIZE = 12
 
+const EMPTY_COPY = {
+  "no-cards": {
+    title: "No cards yet",
+    description:
+      "Add your first card using the form above and it will show up here.",
+  },
+  "all-mastered": {
+    title: "Every card here is mastered",
+    description: "Turn off “Hide Mastered” to see them again.",
+  },
+  "no-matches": {
+    title: "No cards match these filters",
+    description: "Pick other categories to see more cards.",
+  },
+} as const
+
 export type CardGridProps = Pick<CardTileProps, "onEdit" | "onDelete"> & {
   cards: ReadonlyArray<Card>
-  emptyReason: "no-cards" | "no-matches"
+  emptyReason: EmptyReason
 }
 
 /** All Cards grid: 1/2/3 columns, 12 cards at a time with "Load More". */
@@ -29,15 +45,10 @@ export function CardGrid({
     return (
       <Empty className="min-h-62">
         <EmptyHeader>
-          <EmptyTitle>
-            {emptyReason === "no-cards"
-              ? "No cards yet"
-              : "No cards match these filters"}
-          </EmptyTitle>
+          <EmptyTitle>{EMPTY_COPY[emptyReason].title}</EmptyTitle>
+          {/* The design sets this hint in neutral/900 rather than the muted tone. */}
           <EmptyDescription className="text-foreground">
-            {emptyReason === "no-cards"
-              ? "Add your first card using the form above and it will show up here."
-              : "Try other categories or turn off “Hide Mastered”."}
+            {EMPTY_COPY[emptyReason].description}
           </EmptyDescription>
         </EmptyHeader>
       </Empty>

@@ -43,6 +43,27 @@ export function selectCards(
   )
 }
 
+/**
+ * Why a view shows no cards:
+ * - `no-cards`: the deck is empty.
+ * - `all-mastered`: "Hide Mastered" is the only thing hiding the remaining cards.
+ * - `no-matches`: the category filter excludes everything.
+ * Returns `null` when at least one card is visible.
+ */
+export type EmptyReason = "no-cards" | "all-mastered" | "no-matches"
+
+export function deckEmptyReason(
+  cards: ReadonlyArray<Card>,
+  view: DeckView
+): EmptyReason | null {
+  if (cards.length === 0) return "no-cards"
+  if (selectCards(cards, view).length > 0) return null
+  const ignoringMastery = selectCards(cards, { ...view, hideMastered: false })
+  return view.hideMastered && ignoringMastery.length > 0
+    ? "all-mastered"
+    : "no-matches"
+}
+
 /** A fresh seed for the Shuffle button. */
 export function newShuffleSeed(random: () => number = Math.random): number {
   return Math.floor(random() * 2 ** 31)
