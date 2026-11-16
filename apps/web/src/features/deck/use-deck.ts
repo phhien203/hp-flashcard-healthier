@@ -9,7 +9,7 @@ import { useSuspenseQuery } from "@tanstack/react-query"
 import { getRouteApi } from "@tanstack/react-router"
 import { useMemo } from "react"
 import { cardsQueryOptions } from "../../lib/cards-query"
-import { toDeckView, type DeckSearch } from "../../lib/deck-search"
+import { toDeckView, type DeckSearch } from "../../lib/deck-search.schema"
 import type { DeckControlsProps } from "./deck-controls"
 
 const appRoute = getRouteApi("/_app")

@@ -8,7 +8,7 @@ import {
 import { Toaster } from "@workspace/ui/components/sonner"
 import { clerkAppearance, palette } from "@workspace/ui/lib/tokens"
 import appCss from "@workspace/ui/globals.css?url"
-import { fetchSession } from "../server/auth"
+import { fetchSession } from "../lib/auth.functions"
 
 export type RouterContext = {
   queryClient: QueryClient

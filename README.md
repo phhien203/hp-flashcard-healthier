@@ -24,9 +24,9 @@ A full-stack flashcard app built from the [Figma design](https://www.figma.com/d
 ```
 apps/web                 TanStack Start app (Cloudflare Worker)
   src/routes             file routes: /study, /cards, /sign-in, /sign-up
-  src/server             server functions, Clerk auth middleware, D1 access
   src/features           Study Mode, All Cards, deck controls, app shell
-  src/lib                TanStack Query options and mutations, URL search schema
+  src/lib                *.functions.ts server functions + auth middleware, *.server.ts D1 access,
+                         *.schema.ts shared Zod schemas, TanStack Query options and mutations
 packages/core            domain rules: mastery, stats, filters, seeded shuffle, validation, starter deck
 packages/db              Drizzle schema, migrations, user-scoped card repository
 packages/ui              design system: Figma tokens, restyled shadcn components, icons, Storybook
