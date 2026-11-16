@@ -1,7 +1,9 @@
-import { makeCard } from "@workspace/core/testing"
 import { describe, expect, it, vi } from "vitest"
 import { page } from "vitest/browser"
 import { render } from "vitest-browser-react"
+
+import { makeCard } from "@workspace/core/testing"
+
 import { CardGrid, PAGE_SIZE } from "./card-grid"
 
 const cards = Array.from({ length: 30 }, (_, i) =>

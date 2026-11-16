@@ -1,4 +1,4 @@
-import { isMastered, type Card } from "./card"
+import { type Card, isMastered } from "./card"
 
 /**
  * How the learner is currently looking at the deck. Shared by Study Mode and

@@ -1,6 +1,7 @@
 import React from "react"
-import { cn } from "@workspace/ui/lib/utils"
+
 import { controlClassName } from "@workspace/ui/components/input"
+import { cn } from "@workspace/ui/lib/utils"
 
 /** Multi-line text field from the Figma "Textarea" component. */
 function Textarea({ className, ...props }: React.ComponentProps<"textarea">) {

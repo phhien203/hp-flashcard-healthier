@@ -1,4 +1,4 @@
-import { MASTERY_THRESHOLD, isMastered } from "@workspace/core"
+import { isMastered, MASTERY_THRESHOLD } from "@workspace/core"
 import { Badge } from "@workspace/ui/components/badge"
 import { Progress } from "@workspace/ui/components/progress"
 import { Icon } from "@workspace/ui/icons"

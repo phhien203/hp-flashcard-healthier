@@ -1,5 +1,8 @@
-import { CARD_LIMITS, cardInputSchema, type CardInput } from "@workspace/core"
+import React from "react"
+
 import { revalidateLogic, useForm } from "@tanstack/react-form"
+
+import { CARD_LIMITS, type CardInput, cardInputSchema } from "@workspace/core"
 import { Button } from "@workspace/ui/components/button"
 import {
   Field,
@@ -12,7 +15,6 @@ import { Spinner } from "@workspace/ui/components/spinner"
 import { Textarea } from "@workspace/ui/components/textarea"
 import { Icon, type IconName } from "@workspace/ui/icons"
 import { cn } from "@workspace/ui/lib/utils"
-import React from "react"
 
 const EMPTY: CardInput = { question: "", answer: "", category: "" }
 

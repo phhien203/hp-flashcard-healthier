@@ -1,5 +1,8 @@
-import type { Meta, StoryObj } from "@storybook/react-vite"
+import React from "react"
+
+import { toast } from "sonner"
 import { expect, screen, waitFor } from "storybook/test"
+
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -29,8 +32,8 @@ import {
 } from "@workspace/ui/components/dropdown-menu"
 import { Toaster } from "@workspace/ui/components/sonner"
 import { Icon } from "@workspace/ui/icons"
-import React from "react"
-import { toast } from "sonner"
+
+import type { Meta, StoryObj } from "@storybook/react-vite"
 
 const meta = { title: "Components/Overlays" } satisfies Meta
 

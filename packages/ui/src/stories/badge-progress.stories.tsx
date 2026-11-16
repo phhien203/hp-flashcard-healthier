@@ -1,8 +1,10 @@
-import type { Meta, StoryObj } from "@storybook/react-vite"
 import { expect } from "storybook/test"
+
 import { Badge } from "@workspace/ui/components/badge"
 import { Progress } from "@workspace/ui/components/progress"
 import { Icon } from "@workspace/ui/icons"
+
+import type { Meta, StoryObj } from "@storybook/react-vite"
 
 const meta = { title: "Components/Badge & Progress" } satisfies Meta
 

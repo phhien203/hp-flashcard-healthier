@@ -1,3 +1,8 @@
+import React from "react"
+
+import { useSuspenseQuery } from "@tanstack/react-query"
+import { getRouteApi } from "@tanstack/react-router"
+
 import {
   deckEmptyReason,
   getCategoryCounts,
@@ -5,11 +10,10 @@ import {
   newShuffleSeed,
   selectCards,
 } from "@workspace/core"
-import { useSuspenseQuery } from "@tanstack/react-query"
-import { getRouteApi } from "@tanstack/react-router"
-import React from "react"
+
 import { cardsQueryOptions } from "@/lib/cards-query"
-import { toDeckView, type DeckSearch } from "@/lib/deck-search.schema"
+import { type DeckSearch, toDeckView } from "@/lib/deck-search.schema"
+
 import type { DeckControlsProps } from "./deck-controls"
 
 const appRoute = getRouteApi("/_app")

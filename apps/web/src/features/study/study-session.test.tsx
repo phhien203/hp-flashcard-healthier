@@ -1,8 +1,10 @@
-import type { Card } from "@workspace/core"
-import { makeCard } from "@workspace/core/testing"
 import { describe, expect, it, vi } from "vitest"
 import { userEvent } from "vitest/browser"
 import { render } from "vitest-browser-react"
+
+import type { Card } from "@workspace/core"
+import { makeCard } from "@workspace/core/testing"
+
 import { StudySession, type StudySessionProps } from "./study-session"
 
 const deck: Card[] = [

@@ -1,11 +1,12 @@
 # Flashcard monorepo: agent notes
 
-Conventions and gotchas that the code and config don't spell out. Scripts live in the root `package.json`; layout and setup live in `README.md`. Follow `CODING_STANDARDS.md` (rebase-only history, `@` alias imports, `React.` namespace).
+Conventions and gotchas that the code and config don't spell out. Scripts live in the root `package.json`; layout and setup live in `README.md`. Follow `CODING_STANDARDS.md` (rebase-only history, `@` alias imports, `React.` namespace, sorted imports).
 
 ## Import aliases
 
 - `apps/web` maps `@/*` to `src/*` (tsconfig `paths`, resolved by Vite's `resolve.tsconfigPaths`). Storybook and the `ui`/`storybook` Vitest projects enable `tsconfigPaths` too, so web feature stories resolve `@/` through `apps/web/tsconfig.json`.
 - `packages/ui` imports itself as `@workspace/ui/*`. Same-directory imports stay relative (`./card-form`); anything that would need `../` uses an alias. `routeTree.gen.ts` is generated and keeps its relative paths.
+- Every package's `eslint.config.js` is `[...tanstackConfig, ...workspaceConfig]`; shared rule overrides (including `import/order`) live in the root `eslint.config.base.js`. That file must stay import-free: there is no root ESLint install, so each package resolves it from its own `node_modules`. The root `lint-staged.config.js` runs each package's `eslint --fix` on its staged files, then Prettier, in one sequential chain.
 
 ## Boundaries
 

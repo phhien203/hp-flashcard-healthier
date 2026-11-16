@@ -1,7 +1,9 @@
+import React from "react"
+
 import {
-  isMastered,
   type Card,
   type EmptyReason,
+  isMastered,
   type ProgressAction,
 } from "@workspace/core"
 import { Button } from "@workspace/ui/components/button"
@@ -14,7 +16,7 @@ import {
 } from "@workspace/ui/components/empty"
 import { Separator } from "@workspace/ui/components/separator"
 import { Icon } from "@workspace/ui/icons"
-import React from "react"
+
 import { StudyCard } from "./study-card"
 
 export type StudySessionProps = {

@@ -1,8 +1,10 @@
 import React from "react"
-import { cn } from "@workspace/ui/lib/utils"
-import { Icon } from "@workspace/ui/icons"
-import { DropdownMenu as DropdownMenuPrimitive } from "radix-ui"
+
 import { CheckIcon, ChevronRightIcon } from "lucide-react"
+import { DropdownMenu as DropdownMenuPrimitive } from "radix-ui"
+
+import { Icon } from "@workspace/ui/icons"
+import { cn } from "@workspace/ui/lib/utils"
 
 function DropdownMenu({
   ...props
@@ -264,18 +266,18 @@ function DropdownMenuSubContent({
 
 export {
   DropdownMenu,
-  DropdownMenuPortal,
-  DropdownMenuTrigger,
+  DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuGroup,
-  DropdownMenuLabel,
   DropdownMenuItem,
-  DropdownMenuCheckboxItem,
+  DropdownMenuLabel,
+  DropdownMenuPortal,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
   DropdownMenuSeparator,
   DropdownMenuShortcut,
   DropdownMenuSub,
-  DropdownMenuSubTrigger,
   DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuTrigger,
 }

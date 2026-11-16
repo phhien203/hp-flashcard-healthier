@@ -1,9 +1,10 @@
 import React from "react"
-import { cn } from "@workspace/ui/lib/utils"
+
 import { Dialog as DialogPrimitive } from "radix-ui"
 
 import { Button } from "@workspace/ui/components/button"
 import { Icon } from "@workspace/ui/icons"
+import { cn } from "@workspace/ui/lib/utils"
 
 function Dialog({
   ...props

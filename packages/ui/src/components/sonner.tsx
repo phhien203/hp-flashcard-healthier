@@ -1,4 +1,5 @@
 import { Toaster as Sonner, type ToasterProps } from "sonner"
+
 import { Icon } from "@workspace/ui/icons"
 
 /**

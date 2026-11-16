@@ -1,9 +1,12 @@
-import type { Meta, StoryObj } from "@storybook/react-vite"
-import { STARTER_DECK, getStats, type Card } from "@workspace/core"
 import { expect, fn, waitFor } from "storybook/test"
+
+import { type Card, getStats, STARTER_DECK } from "@workspace/core"
+
 import { StatsPanel } from "./stats-panel"
 import { StudyCard } from "./study-card"
 import { StudySession } from "./study-session"
+
+import type { Meta, StoryObj } from "@storybook/react-vite"
 
 const deck: Card[] = STARTER_DECK.slice(0, 6).map((card, i) => ({
   ...card,

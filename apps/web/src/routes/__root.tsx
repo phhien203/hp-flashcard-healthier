@@ -1,14 +1,17 @@
 import { ClerkProvider } from "@clerk/tanstack-react-start"
-import type { QueryClient } from "@tanstack/react-query"
 import {
+  createRootRouteWithContext,
   HeadContent,
   Scripts,
-  createRootRouteWithContext,
 } from "@tanstack/react-router"
+
 import { Toaster } from "@workspace/ui/components/sonner"
-import { clerkAppearance, palette } from "@workspace/ui/lib/tokens"
 import appCss from "@workspace/ui/globals.css?url"
+import { clerkAppearance, palette } from "@workspace/ui/lib/tokens"
+
 import { fetchSession } from "@/lib/auth.functions"
+
+import type { QueryClient } from "@tanstack/react-query"
 
 export type RouterContext = {
   queryClient: QueryClient

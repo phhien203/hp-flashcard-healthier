@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest"
-import { STARTER_DECK, getStats, cardInputSchema } from "./index"
+
+import { cardInputSchema, getStats, STARTER_DECK } from "./index"
 
 describe("STARTER_DECK", () => {
   it("matches the deck shown in the design: 40 cards, 11 mastered, 21 in progress, 8 not started", () => {

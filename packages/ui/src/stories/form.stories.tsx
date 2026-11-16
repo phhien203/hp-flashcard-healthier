@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from "@storybook/react-vite"
 import { expect } from "storybook/test"
+
 import {
   Field,
   FieldError,
@@ -9,6 +9,8 @@ import {
 import { Input } from "@workspace/ui/components/input"
 import { Textarea } from "@workspace/ui/components/textarea"
 import { Icon } from "@workspace/ui/icons"
+
+import type { Meta, StoryObj } from "@storybook/react-vite"
 
 const meta = {
   title: "Components/Form fields",
