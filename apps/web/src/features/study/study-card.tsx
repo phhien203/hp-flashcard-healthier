@@ -8,7 +8,13 @@ import { CardProgress } from "@/features/deck/card-progress"
 export type StudyCardProps = {
   card: Card
   revealed: boolean
-  onToggle: () => void
+  /** `pointer` is false for keyboard activation (Enter/Space), which stays instant. */
+  onToggle: (pointer: boolean) => void
+  /**
+   * Enter-animation classes for the content swap, or undefined to change
+   * instantly (keyboard, reduced motion). Set by the parent per interaction.
+   */
+  swapAnimationClass?: string
 }
 
 /**
@@ -18,11 +24,18 @@ export type StudyCardProps = {
  * name is its visible text (question or answer); `aria-pressed` tells whether
  * the answer side is showing.
  */
-export function StudyCard({ card, revealed, onToggle }: StudyCardProps) {
+export function StudyCard({
+  card,
+  revealed,
+  onToggle,
+  swapAnimationClass,
+}: StudyCardProps) {
   return (
     <button
       type="button"
-      onClick={onToggle}
+      // `detail` is 0 for keyboard-triggered clicks (Enter/Space) and >= 1 for
+      // pointer clicks, which is how we keep keyboard activation instant.
+      onClick={(event) => onToggle(event.detail > 0)}
       aria-pressed={revealed}
       className={cn(
         "relative flex h-[300px] w-full cursor-pointer flex-col items-center gap-4 overflow-hidden rounded-xl border-2 border-border p-6 text-foreground shadow-hard-2 focus-ring transition-[background-color,translate,box-shadow] duration-200 ease-out-strong select-none active:translate-x-px active:translate-y-px active:shadow-hard-1 sm:h-[360px]",
@@ -36,8 +49,13 @@ export function StudyCard({ card, revealed, onToggle }: StudyCardProps) {
       <Badge className="relative">{card.category}</Badge>
 
       <div
-        key={revealed ? "answer" : "question"}
-        className="relative flex min-h-0 w-full flex-1 animate-in flex-col items-center justify-center gap-4 text-center duration-200 fade-in-0 zoom-in-[0.98]"
+        // Re-key on both the card and the revealed side so navigating to
+        // another card also replays the content swap.
+        key={`${card.id}:${revealed ? "answer" : "question"}`}
+        className={cn(
+          "relative flex min-h-0 w-full flex-1 flex-col items-center justify-center gap-4 text-center",
+          swapAnimationClass
+        )}
       >
         {revealed ? (
           <>

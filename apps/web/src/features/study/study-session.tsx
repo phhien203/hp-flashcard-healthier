@@ -29,6 +29,15 @@ export type StudySessionProps = {
   emptyAction?: React.ReactNode
 }
 
+// Content-swap enter animations, reused from the design-system motion tokens.
+// Reveal/hide the answer fades the new side in over 150ms (the pink<->blue
+// background keeps its own transition); navigation is a briefer 125ms content
+// fade. Both keep the card frame stationary and are suppressed for keyboard
+// input and (via globals.css) reduced motion.
+const SWAP_FADE = "animate-in fade-in-0 ease-out-strong"
+const REVEAL_ANIMATION = `${SWAP_FADE} duration-150`
+const NAV_ANIMATION = `${SWAP_FADE} duration-[125ms]`
+
 /**
  * Study Mode's main panel: the current card, "I Know This" / "Reset
  * Progress", and Previous / Next (also ← / → on the keyboard).
@@ -43,14 +52,20 @@ export function StudySession({
   // Remember which card is flipped rather than a boolean, so a card that slides
   // into the slot (the previous one was mastered or deleted) starts on its question.
   const [revealedId, setRevealedId] = React.useState<string | null>(null)
+  // Enter-animation classes for the current content swap, or undefined to change
+  // instantly. Pointer interactions animate; keyboard ones stay at 0ms.
+  const [swapAnimation, setSwapAnimation] = React.useState<string | undefined>(
+    undefined
+  )
 
   // If the current card leaves the list (mastered while "Hide Mastered" is on,
   // or deleted), the next card slides into its slot; clamp at the end.
   const index = Math.min(position, Math.max(cards.length - 1, 0))
   const card = cards[index]
 
-  const go = (delta: number) => {
+  const go = (delta: number, pointer: boolean) => {
     if (cards.length === 0) return
+    setSwapAnimation(pointer ? NAV_ANIMATION : undefined)
     setPosition((index + delta + cards.length) % cards.length)
     setRevealedId(null)
   }
@@ -71,8 +86,8 @@ export function StudySession({
         )
       )
         return
-      if (event.key === "ArrowLeft") go(-1)
-      else if (event.key === "ArrowRight") go(1)
+      if (event.key === "ArrowLeft") go(-1, false)
+      else if (event.key === "ArrowRight") go(1, false)
       else return
       event.preventDefault()
     }
@@ -93,7 +108,11 @@ export function StudySession({
         <StudyCard
           card={card}
           revealed={revealed}
-          onToggle={() => setRevealedId(revealed ? null : card.id)}
+          swapAnimationClass={swapAnimation}
+          onToggle={(pointer) => {
+            setSwapAnimation(pointer ? REVEAL_ANIMATION : undefined)
+            setRevealedId(revealed ? null : card.id)
+          }}
         />
         <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:gap-5">
           <Button
@@ -121,7 +140,7 @@ export function StudySession({
       >
         <Button
           variant="outline"
-          onClick={() => go(-1)}
+          onClick={(event) => go(-1, event.detail > 0)}
           className="max-sm:size-10 max-sm:p-0"
         >
           <Icon name="angle-left" />
@@ -132,7 +151,7 @@ export function StudySession({
         </p>
         <Button
           variant="outline"
-          onClick={() => go(1)}
+          onClick={(event) => go(1, event.detail > 0)}
           className="max-sm:size-10 max-sm:p-0"
         >
           <span className="max-sm:sr-only">Next</span>
