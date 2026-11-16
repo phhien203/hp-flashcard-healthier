@@ -6,7 +6,7 @@ Conventions and gotchas that the code and config don't spell out. Scripts live i
 
 - `packages/core` owns every flashcard rule (mastery threshold, stats, filtering, seeded shuffle, empty-state reason, card validation). The UI and the server import these rules and never re-derive them.
   - The one exception is `recordProgress` in `packages/db`. It mirrors `applyProgress` in SQL (`min(known_count + 1, 5)`) so concurrent presses stay atomic. The repository tests pin the two together; change both at once.
-- `packages/db` is the only code that touches SQL. Every repository method takes the Clerk `userId` first and scopes its query by it. Server functions in `apps/web/src/server` get that id from the `requireUser` middleware, never from client input.
+- `packages/db` is the only code that touches SQL. Every repository method takes the Clerk `userId` first and scopes its query by it. Server functions (`apps/web/src/lib/*.functions.ts`) get that id from the `requireUser` middleware, never from client input.
 - `packages/ui` holds design-system primitives only (shadcn components restyled to the Figma tokens). Flashcard-specific components live in `apps/web/src/features`.
 
 ## Design system
@@ -14,6 +14,15 @@ Conventions and gotchas that the code and config don't spell out. Scripts live i
 - Tokens are mapped once, in `packages/ui/src/styles/globals.css`: Figma variables → `--fc-*` → shadcn semantic tokens. Use semantic utilities (`bg-primary`, `border-border`) or the `text-preset-*` type scale. Raw hex values live only there and in `src/lib/tokens.ts`, which serves consumers that can't read CSS variables (Clerk's `appearance`, the `theme-color` meta tag). `tokens.test.ts` fails if the two drift apart.
 - When you add a custom utility that shares a Tailwind prefix (`text-*`, `shadow-*`), register it in `extendTailwindMerge` in `packages/ui/src/lib/utils.ts`. Otherwise `cn()` silently drops it when it meets a conflicting class.
 - Icons are the Figma SVG exports in `packages/ui/src/assets/icons`, rendered through `<Icon name=…>`. To add one, export it from Figma into that folder and register it in `src/icons/index.tsx` with its intrinsic size.
+
+## TanStack Start conventions
+
+Follows `.agents/skills/tanstack-start-best-practices`, adapted to the installed Start version:
+
+- File suffixes in `apps/web/src/lib`: `*.functions.ts` holds `createServerFn` wrappers and function middleware (safe to import anywhere; the client gets RPC stubs), `*.server.ts` holds server-only code wrapped in `createServerOnlyFn`, `*.schema.ts` holds Zod schemas shared by server-function validators, mutation hooks and routes. Routes and components never import `*.server.ts`.
+- Validate every server-function input with a schema. This Start version names the method `.validator()`; the skill's `.inputValidator()` does not exist here.
+- Throw `notFound()` for a missing card and `redirect()` for a missing session, never a raw `Response`. `useServerFn` follows the redirect and then resolves to `undefined`, which is why mutation results are typed `Card | undefined`.
+- The global function middleware in `src/start.ts` logs unexpected server-function errors and, in production, replaces them with a generic message.
 
 ## Data and state
 

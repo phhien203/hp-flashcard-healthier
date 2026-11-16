@@ -337,6 +337,13 @@
       "skillPath": "plugins/tanstack-start/skills/tanstack-start/SKILL.md",
       "computedHash": "639fa82b4266c720b0b8927cac9d3d22248c354ad36fffdbdcf5675b9d94f32a"
     },
+    "tanstack-start-best-practices": {
+      "source": "DeckardGer/tanstack-agent-skills",
+      "commit": "b2fc14c974b2ca09b38de09c28237f240175205b",
+      "sourceType": "github",
+      "skillPath": "skills/tanstack-start/SKILL.md",
+      "computedHash": "d9827c80844a520af294229cc2051154ab6ad2ef3968a597e860330cf36117d2"
+    },
     "tdd": {
       "source": "mattpocock/skills",
       "sourceType": "github",

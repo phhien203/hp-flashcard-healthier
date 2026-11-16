@@ -1,9 +1,4 @@
-import {
-  applyProgress,
-  type Card,
-  type CardInput,
-  type ProgressAction,
-} from "@workspace/core"
+import { applyProgress, type Card, type CardInput } from "@workspace/core"
 import {
   queryOptions,
   useMutation,
@@ -17,7 +12,8 @@ import {
   listCards,
   recordProgress,
   updateCard,
-} from "../server/cards"
+} from "./cards.functions"
+import type { RecordProgressVars, UpdateCardVars } from "./cards.schema"
 
 /** The signed-in user's whole deck. Decks are small, so it is loaded in one go. */
 export const cardsQueryOptions = queryOptions({
@@ -54,6 +50,12 @@ function useDeckCache() {
   }
 }
 
+/**
+ * `useServerFn` turns a server redirect (session expired) into a navigation and
+ * then resolves to `undefined`, so mutation results are typed as optional.
+ */
+type Redirectable<T> = Promise<T | undefined>
+
 function toastFailure(what: string) {
   toast.error(`Couldn’t ${what}. Check your connection and try again.`)
 }
@@ -63,7 +65,7 @@ export function useRecordProgress() {
   const cache = useDeckCache()
   const record = useServerFn(recordProgress)
   return useMutation({
-    mutationFn: (vars: { id: string; action: ProgressAction }) =>
+    mutationFn: (vars: RecordProgressVars): Redirectable<Card> =>
       record({ data: vars }),
     onMutate: ({ id, action }) =>
       cache.optimistic((cards) =>
@@ -77,7 +79,9 @@ export function useRecordProgress() {
       rollback?.()
       toastFailure("save your progress")
     },
-    onSuccess: (card) => cache.replace(card),
+    onSuccess: (card) => {
+      if (card) cache.replace(card)
+    },
   })
 }
 
@@ -85,8 +89,10 @@ export function useCreateCard() {
   const cache = useDeckCache()
   const create = useServerFn(createCard)
   return useMutation({
-    mutationFn: (input: CardInput) => create({ data: input }),
+    mutationFn: (input: CardInput): Redirectable<Card> =>
+      create({ data: input }),
     onSuccess: (card) => {
+      if (!card) return
       cache.append(card)
       toast("Card created successfully.")
     },
@@ -98,9 +104,10 @@ export function useUpdateCard() {
   const cache = useDeckCache()
   const update = useServerFn(updateCard)
   return useMutation({
-    mutationFn: (vars: { id: string; input: CardInput }) =>
+    mutationFn: (vars: UpdateCardVars): Redirectable<Card> =>
       update({ data: vars }),
     onSuccess: (card) => {
+      if (!card) return
       cache.replace(card)
       toast("Card updated successfully.")
     },
@@ -112,14 +119,17 @@ export function useDeleteCard() {
   const cache = useDeckCache()
   const remove = useServerFn(deleteCard)
   return useMutation({
-    mutationFn: (id: string) => remove({ data: { id } }),
+    mutationFn: (id: string): Redirectable<{ id: string }> =>
+      remove({ data: { id } }),
     onMutate: (id) =>
       cache.optimistic((cards) => cards.filter((c) => c.id !== id)),
     onError: (_error, _id, rollback) => {
       rollback?.()
       toastFailure("delete the card")
     },
-    onSuccess: () => toast("Card deleted."),
+    onSuccess: (deleted) => {
+      if (deleted) toast("Card deleted.")
+    },
     onSettled: () => cache.invalidate(),
   })
 }
