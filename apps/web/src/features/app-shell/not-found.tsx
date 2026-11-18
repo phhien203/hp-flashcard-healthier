@@ -8,10 +8,12 @@ import {
   EmptyHeader,
   EmptyTitle,
 } from "@workspace/ui/components/empty"
+import { ThemeSwitcher } from "@workspace/ui/components/theme-switcher"
 
 export function NotFound() {
   return (
-    <Empty className="min-h-svh">
+    <Empty className="relative min-h-svh">
+      <ThemeSwitcher className="absolute top-4 right-4" />
       <EmptyHeader>
         <EmptyTitle>Page not found</EmptyTitle>
         <EmptyDescription>

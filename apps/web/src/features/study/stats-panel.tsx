@@ -65,7 +65,7 @@ export function StatsPanel({
             </div>
             <div
               className={cn(
-                "-my-px -mr-px flex w-25 shrink-0 items-center justify-center border border-border",
+                "-my-px -mr-px flex w-25 shrink-0 items-center justify-center border border-border text-ink",
                 tone
               )}
             >

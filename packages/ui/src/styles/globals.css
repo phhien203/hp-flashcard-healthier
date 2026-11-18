@@ -19,8 +19,15 @@
  * Primitive values are copied 1:1 from the Figma variables of the
  * "flashcard-app" file. Components only ever use the semantic layer or the
  * brand palette utilities (bg-pink-400 …) that map to named Figma colors.
- * The design ships a single light theme, so there is no dark variant.
+ *
+ * There is no dark palette in the Figma file. `.dark` retints the semantic
+ * layer (page, card, ink, borders) into a warm night version of the same
+ * sticker language. The `--fc-*` primitives stay put: inverting them would
+ * turn the dialog scrim into a white veil and wash out the candy card faces.
+ * Hex values here match `themeColors` in `src/lib/tokens.ts`.
  */
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
   /* colors/* */
   --fc-neutral-0: #ffffff;
@@ -35,6 +42,16 @@
   --fc-pink-500: #f073a3;
   --fc-pink-700: #e11966;
 
+  /* Ink that stays dark on the yellow, pink, blue and teal sticker faces. */
+  --ink: #2e1401;
+  /* Text links (Clerk "Sign up"). Yellow on white is about 1.54:1. */
+  --link: #2450b2;
+  /* 2px gap inside the focus ring. White in light, night paper in dark. */
+  --focus-gap: #ffffff;
+  /* Scrim. A fixed dark veil — not --fc-neutral-900, which text color reuses. */
+  --overlay: rgb(46 20 1 / 0.7);
+  --fc-shadow: rgb(46 20 1 / 0.2);
+
   /* shadcn semantic tokens */
   --background: var(--fc-neutral-100);
   --foreground: var(--fc-neutral-900);
@@ -43,18 +60,45 @@
   --popover: var(--fc-neutral-0);
   --popover-foreground: var(--fc-neutral-900);
   --primary: var(--fc-yellow-500);
-  --primary-foreground: var(--fc-neutral-900);
+  --primary-foreground: var(--ink);
   --secondary: var(--fc-neutral-0);
   --secondary-foreground: var(--fc-neutral-900);
   --muted: var(--fc-neutral-100);
   --muted-foreground: var(--fc-neutral-600);
-  --accent: var(--fc-neutral-100);
-  --accent-foreground: var(--fc-neutral-900);
-  --destructive: var(--fc-pink-700);
+  /* Darkened from pink/700 (#e11966 is 4.20:1 on the page) so error text clears AA. */
+  --destructive: #c41256;
   --border: var(--fc-neutral-900);
   --input: var(--fc-neutral-900);
   --ring: var(--fc-blue-600);
+  --accent: var(--fc-neutral-100);
+  --accent-foreground: var(--fc-neutral-900);
   --radius: 16px;
+}
+
+.dark {
+  color-scheme: dark;
+  --background: #1a100b;
+  --foreground: #f7f3f0;
+  --card: #2c1c14;
+  --card-foreground: #f7f3f0;
+  --popover: #2c1c14;
+  --popover-foreground: #f7f3f0;
+  --primary: #f8cb46;
+  --primary-foreground: var(--ink);
+  --secondary: #3a281c;
+  --secondary-foreground: #f7f3f0;
+  --muted: #3a281c;
+  --muted-foreground: #d4c4b4;
+  --accent: #3a281c;
+  --accent-foreground: #f7f3f0;
+  --destructive: #ff8ab5;
+  --border: #f6efe8;
+  --input: #f6efe8;
+  --ring: #92adeb;
+  --link: #92adeb;
+  --focus-gap: #1a100b;
+  --overlay: rgb(8 4 2 / 0.75);
+  --fc-shadow: rgb(0 0 0 / 0.55);
 }
 
 @theme inline {
@@ -79,6 +123,9 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
+  --color-ink: var(--ink);
+  --color-link: var(--link);
+  --color-overlay: var(--overlay);
 
   /* Brand palette (Figma colors/*), used for the card faces and stat tiles */
   --color-neutral-0: var(--fc-neutral-0);
@@ -102,14 +149,13 @@
   --radius-2xl: 16px;
   --radius-4xl: 999px;
 
-  /* Hard "sticker" shadows used throughout the design */
-  --shadow-hard-1: 1px 1px 0 0 var(--fc-neutral-900);
-  --shadow-hard-2: 2px 2px 0 0 var(--fc-neutral-900);
-  --shadow-tab: 1px 2px 0 0 var(--fc-neutral-900);
-  --shadow-error: 2px 2px 0 0 var(--fc-pink-700);
-  --shadow-pop: 0 3px 8px 0 rgb(46 20 1 / 0.2);
-  --shadow-toast:
-    0 3px 8px 0 rgb(46 20 1 / 0.2), 2px 2px 0 0 var(--fc-neutral-900);
+  /* Sticker shadows follow the semantic border so they stay visible on night paper. */
+  --shadow-hard-1: 1px 1px 0 0 var(--border);
+  --shadow-hard-2: 2px 2px 0 0 var(--border);
+  --shadow-tab: 1px 2px 0 0 var(--border);
+  --shadow-error: 2px 2px 0 0 var(--destructive);
+  --shadow-pop: 0 3px 8px 0 var(--fc-shadow);
+  --shadow-toast: 0 3px 8px 0 var(--fc-shadow), 2px 2px 0 0 var(--border);
 
   --ease-out-strong: cubic-bezier(0.23, 1, 0.32, 1);
 }
@@ -157,12 +203,12 @@
   letter-spacing: -0.36px;
 }
 
-/* Keyboard focus ring from the "Focus" frames: 2px white gap + 2px blue-600 */
+/* Keyboard focus ring from the "Focus" frames: 2px gap + 2px ring */
 @utility focus-ring {
   outline: none;
   &:focus-visible {
     box-shadow:
-      0 0 0 2px var(--fc-neutral-0),
+      0 0 0 2px var(--focus-gap),
       0 0 0 4px var(--ring);
   }
 }
@@ -186,6 +232,7 @@
     @apply border-border;
   }
   html {
+    color-scheme: light;
     -webkit-text-size-adjust: 100%;
   }
   body {

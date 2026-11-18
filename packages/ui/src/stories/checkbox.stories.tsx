@@ -29,3 +29,6 @@ export const Unchecked: Story = {
 }
 
 export const Checked: Story = { args: { defaultChecked: true } }
+
+export const UncheckedDark: Story = { ...Unchecked, globals: { theme: "dark" } }
+export const CheckedDark: Story = { ...Checked, globals: { theme: "dark" } }

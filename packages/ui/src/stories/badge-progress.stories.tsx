@@ -40,3 +40,16 @@ export const ProgressSteps: Story = {
     await expect(bar).toHaveAttribute("aria-valuenow", "2")
   },
 }
+
+export const CategoryTagDark: Story = {
+  ...CategoryTag,
+  globals: { theme: "dark" },
+}
+export const MasteredChipDark: Story = {
+  ...MasteredChip,
+  globals: { theme: "dark" },
+}
+export const ProgressStepsDark: Story = {
+  ...ProgressSteps,
+  globals: { theme: "dark" },
+}

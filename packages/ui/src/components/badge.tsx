@@ -17,7 +17,7 @@ const badgeVariants = cva(
     variants: {
       variant: {
         default: "bg-card",
-        success: "bg-teal-400 px-2.5 py-1",
+        success: "bg-teal-400 px-2.5 py-1 text-ink",
       },
     },
     defaultVariants: {

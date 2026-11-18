@@ -33,3 +33,8 @@ export const NoCardsToStudy: Story = {
     </Empty>
   ),
 }
+
+export const NoCardsToStudyDark: Story = {
+  ...NoCardsToStudy,
+  globals: { theme: "dark" },
+}

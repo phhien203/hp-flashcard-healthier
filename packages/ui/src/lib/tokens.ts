@@ -2,6 +2,11 @@
  * Figma palette for consumers that cannot read CSS variables (Clerk's
  * `appearance.variables`, the `theme-color` meta tag). Mirrors the `--fc-*`
  * variables in `styles/globals.css`; `tokens.test.ts` keeps the two in sync.
+ *
+ * `themeColors` is the semantic layer (page, card, text, danger, links).
+ * The same hex values are written into `globals.css`. Primitives stay the
+ * light Figma colors in both themes so candy card faces and the dialog
+ * scrim are not inverted.
  */
 export const palette = {
   "neutral-0": "#ffffff",
@@ -17,19 +22,90 @@ export const palette = {
   "pink-700": "#e11966",
 } as const
 
-/** Clerk sign-in / sign-up / user menu themed with the design tokens. */
+/** Ink that stays dark on yellow, pink, blue and teal sticker faces. */
+export const ink = palette["neutral-900"]
+
+export const themeColors = {
+  light: {
+    background: palette["neutral-100"],
+    foreground: palette["neutral-900"],
+    card: palette["neutral-0"],
+    muted: palette["neutral-100"],
+    mutedForeground: palette["neutral-600"],
+    /** Darkened from pink/700 so 12px error text clears 4.5:1 on the page. */
+    destructive: "#c41256",
+    border: palette["neutral-900"],
+    primary: palette["yellow-500"],
+    primaryForeground: ink,
+    ring: palette["blue-600"],
+    /** Sign-in / sign-up links. Yellow on white is about 1.54:1. */
+    link: "#2450b2",
+    themeColor: palette["neutral-100"],
+  },
+  dark: {
+    background: "#1a100b",
+    foreground: "#f7f3f0",
+    card: "#2c1c14",
+    muted: "#3a281c",
+    mutedForeground: "#d4c4b4",
+    destructive: "#ff8ab5",
+    border: "#f6efe8",
+    primary: palette["yellow-500"],
+    primaryForeground: ink,
+    ring: palette["blue-400"],
+    link: palette["blue-400"],
+    themeColor: "#1a100b",
+  },
+} as const
+
+const fontFamily = "Poppins, ui-sans-serif, system-ui, sans-serif"
+
+const linkStyle = {
+  color: "var(--link)",
+  "&:hover": { color: "var(--link)" },
+  "&:focus": { color: "var(--link)" },
+  "&:focus-visible": { color: "var(--link)" },
+} as const
+
+/**
+ * Clerk sign-in / sign-up / user menu. Colors point at the semantic CSS
+ * variables, so the pre-paint theme class restyles Clerk without waiting for
+ * hydration. Text links use `--link` rather than the yellow primary, which
+ * fails WCAG AA as text on white.
+ */
 export const clerkAppearance = {
   variables: {
-    colorPrimary: palette["yellow-500"],
-    colorPrimaryForeground: palette["neutral-900"],
-    colorForeground: palette["neutral-900"],
-    colorMutedForeground: palette["neutral-600"],
-    colorBackground: palette["neutral-0"],
-    colorInput: palette["neutral-0"],
-    colorBorder: palette["neutral-900"],
-    colorDanger: palette["pink-700"],
-    colorRing: palette["blue-600"],
-    fontFamily: "Poppins, ui-sans-serif, system-ui, sans-serif",
+    colorPrimary: "var(--primary)",
+    colorPrimaryForeground: "var(--primary-foreground)",
+    colorForeground: "var(--foreground)",
+    colorMutedForeground: "var(--muted-foreground)",
+    colorMuted: "var(--muted)",
+    colorNeutral: "var(--border)",
+    colorBackground: "var(--card)",
+    colorInput: "var(--card)",
+    colorInputForeground: "var(--foreground)",
+    colorBorder: "var(--border)",
+    colorDanger: "var(--destructive)",
+    colorRing: "var(--ring)",
+    fontFamily,
     borderRadius: "12px",
+  },
+  elements: {
+    footerActionLink: linkStyle,
+    formFieldAction: linkStyle,
+    formResendCodeLink: linkStyle,
+    identityPreviewEditButton: linkStyle,
+    formButtonPrimary: {
+      backgroundColor: "var(--primary)",
+      color: "var(--primary-foreground)",
+      "&:hover": {
+        backgroundColor: "var(--primary)",
+        color: "var(--primary-foreground)",
+      },
+      "&:focus": {
+        backgroundColor: "var(--primary)",
+        color: "var(--primary-foreground)",
+      },
+    },
   },
 } as const

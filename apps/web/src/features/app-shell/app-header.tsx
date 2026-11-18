@@ -1,12 +1,14 @@
 import { UserButton } from "@clerk/tanstack-react-start"
 import { Link } from "@tanstack/react-router"
 
+import { ThemeSwitcher } from "@workspace/ui/components/theme-switcher"
+
 import { Logo } from "./logo"
 import { ModeNav } from "./mode-nav"
 
 export function AppHeader() {
   return (
-    <header className="flex items-center justify-between gap-4">
+    <header className="flex flex-wrap items-center justify-between gap-3">
       <Link
         to="/study"
         search={true}
@@ -15,7 +17,8 @@ export function AppHeader() {
       >
         <Logo />
       </Link>
-      <div className="flex items-center gap-3">
+      <div className="flex flex-wrap items-center justify-end gap-3">
+        <ThemeSwitcher />
         <ModeNav />
         {/* Not in the Figma file: account menu for sign-out and profile. */}
         <UserButton

@@ -1,93 +1,136 @@
 /**
- * SVG assets exported from the Figma file. Rendered as <img> so the
- * artwork stays byte-for-byte identical to the design; every icon keeps its
- * intrinsic Figma size via the `width`/`height` below.
+ * SVG assets exported from the Figma file.
+ *
+ * Monochrome icons are inlined with `fill="currentColor"` so they follow the
+ * surrounding text color (cream on night paper, ink on yellow and candy
+ * faces). Decorative multi-color artwork stays an `<img>` so its gradients
+ * and filters stay byte-for-byte identical to the export.
  */
 import React from "react"
 
-import angleDownUrl from "@workspace/ui/assets/icons/angle-down.svg"
-import angleLeftUrl from "@workspace/ui/assets/icons/angle-left.svg"
-import angleRightUrl from "@workspace/ui/assets/icons/angle-right.svg"
-import brainSolidUrl from "@workspace/ui/assets/icons/brain-solid.svg"
-import checkCircleUrl from "@workspace/ui/assets/icons/check-circle.svg"
-import checkboxCheckedUrl from "@workspace/ui/assets/icons/checkbox-checked.svg"
-import circlePlusUrl from "@workspace/ui/assets/icons/circle-plus.svg"
-import closeToastUrl from "@workspace/ui/assets/icons/close-toast.svg"
-import closeUrl from "@workspace/ui/assets/icons/close.svg"
-import dotsUrl from "@workspace/ui/assets/icons/dots.svg"
-import editUrl from "@workspace/ui/assets/icons/edit.svg"
-import errorUrl from "@workspace/ui/assets/icons/error.svg"
-import logoCardsUrl from "@workspace/ui/assets/icons/logo-cards.svg"
-import logoTitleUrl from "@workspace/ui/assets/icons/logo-title.svg"
+import angleDown from "@workspace/ui/assets/icons/angle-down.svg?raw"
+import angleLeft from "@workspace/ui/assets/icons/angle-left.svg?raw"
+import angleRight from "@workspace/ui/assets/icons/angle-right.svg?raw"
+import brainSolid from "@workspace/ui/assets/icons/brain-solid.svg?raw"
+import checkCircle from "@workspace/ui/assets/icons/check-circle.svg?raw"
+import checkboxChecked from "@workspace/ui/assets/icons/checkbox-checked.svg?raw"
+import circlePlus from "@workspace/ui/assets/icons/circle-plus.svg?raw"
+import closeToast from "@workspace/ui/assets/icons/close-toast.svg?raw"
+import close from "@workspace/ui/assets/icons/close.svg?raw"
+import dots from "@workspace/ui/assets/icons/dots.svg?raw"
+import edit from "@workspace/ui/assets/icons/edit.svg?raw"
+import error from "@workspace/ui/assets/icons/error.svg?raw"
+import logoCards from "@workspace/ui/assets/icons/logo-cards.svg?raw"
+import logoTitle from "@workspace/ui/assets/icons/logo-title.svg?raw"
 import patternUrl from "@workspace/ui/assets/icons/pattern.svg"
-import shuffleUrl from "@workspace/ui/assets/icons/shuffle.svg"
+import shuffle from "@workspace/ui/assets/icons/shuffle.svg?raw"
 import sparkleBlueUrl from "@workspace/ui/assets/icons/sparkle-blue.svg"
 import sparklePinkUrl from "@workspace/ui/assets/icons/sparkle-pink.svg"
 import sparkleYellowUrl from "@workspace/ui/assets/icons/sparkle-yellow.svg"
-import statInProgressUrl from "@workspace/ui/assets/icons/stat-in-progress.svg"
-import statMasteredUrl from "@workspace/ui/assets/icons/stat-mastered.svg"
-import statNotStartedUrl from "@workspace/ui/assets/icons/stat-not-started.svg"
-import statTotalUrl from "@workspace/ui/assets/icons/stat-total.svg"
-import trashUrl from "@workspace/ui/assets/icons/trash.svg"
-import undoUrl from "@workspace/ui/assets/icons/undo.svg"
+import statInProgress from "@workspace/ui/assets/icons/stat-in-progress.svg?raw"
+import statMastered from "@workspace/ui/assets/icons/stat-mastered.svg?raw"
+import statNotStarted from "@workspace/ui/assets/icons/stat-not-started.svg?raw"
+import statTotal from "@workspace/ui/assets/icons/stat-total.svg?raw"
+import trash from "@workspace/ui/assets/icons/trash.svg?raw"
+import undo from "@workspace/ui/assets/icons/undo.svg?raw"
 import { cn } from "@workspace/ui/lib/utils"
 
-const icons = {
-  "angle-down": { src: angleDownUrl, width: 16, height: 16 },
-  "angle-left": { src: angleLeftUrl, width: 16, height: 16 },
-  "angle-right": { src: angleRightUrl, width: 16, height: 16 },
-  "brain-solid": { src: brainSolidUrl, width: 16, height: 16 },
-  "check-circle": { src: checkCircleUrl, width: 16, height: 16 },
-  "checkbox-checked": { src: checkboxCheckedUrl, width: 16, height: 16 },
-  "circle-plus": { src: circlePlusUrl, width: 16, height: 16 },
-  close: { src: closeUrl, width: 16, height: 16 },
-  "close-toast": { src: closeToastUrl, width: 16, height: 16 },
-  dots: { src: dotsUrl, width: 3.375, height: 14.0625 },
-  edit: { src: editUrl, width: 16, height: 16 },
-  error: { src: errorUrl, width: 14, height: 15 },
-  "logo-cards": { src: logoCardsUrl, width: 20.7692, height: 20 },
-  "logo-title": { src: logoTitleUrl, width: 106.92, height: 17.76 },
+const INK_FILL = /fill="(?:#2[Ee]1401|#6[Dd]5[Bb]4[Dd]|#E11966|#e11966|black)"/g
+
+function toInk(svg: string) {
+  return svg.replace(INK_FILL, 'fill="currentColor"')
+}
+
+function escapeAttr(value: string) {
+  return value
+    .replaceAll("&", "&amp;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("<", "&lt;")
+}
+
+/** Give each inline copy its own ids so two logos on one page don't share a clip. */
+function uniquify(svg: string, prefix: string) {
+  return svg
+    .replace(/\bid="([^"]+)"/g, (_, id: string) => `id="${prefix}${id}"`)
+    .replace(/url\(#([^)]+)\)/g, (_, id: string) => `url(#${prefix}${id})`)
+    .replace(/href="#([^"]+)"/g, (_, id: string) => `href="#${prefix}${id}"`)
+}
+
+const ink = {
+  "angle-down": toInk(angleDown),
+  "angle-left": toInk(angleLeft),
+  "angle-right": toInk(angleRight),
+  "brain-solid": toInk(brainSolid),
+  "check-circle": toInk(checkCircle),
+  "checkbox-checked": toInk(checkboxChecked),
+  "circle-plus": toInk(circlePlus),
+  close: toInk(close),
+  "close-toast": toInk(closeToast),
+  dots: toInk(dots),
+  edit: toInk(edit),
+  error: toInk(error),
+  "logo-cards": toInk(logoCards),
+  "logo-title": toInk(logoTitle),
+  shuffle: toInk(shuffle),
+  "stat-in-progress": toInk(statInProgress),
+  "stat-mastered": toInk(statMastered),
+  "stat-not-started": toInk(statNotStarted),
+  "stat-total": toInk(statTotal),
+  trash: toInk(trash),
+  undo: toInk(undo),
+} as const
+
+const images = {
   pattern: { src: patternUrl, width: 776.539, height: 527.572 },
-  shuffle: { src: shuffleUrl, width: 16, height: 16 },
   "sparkle-blue": { src: sparkleBlueUrl, width: 24.3, height: 25.125 },
   "sparkle-pink": { src: sparklePinkUrl, width: 24.3, height: 25.125 },
   "sparkle-yellow": { src: sparkleYellowUrl, width: 32.4, height: 33.5 },
-  "stat-in-progress": { src: statInProgressUrl, width: 30, height: 24 },
-  "stat-mastered": { src: statMasteredUrl, width: 25.4558, height: 24 },
-  "stat-not-started": { src: statNotStartedUrl, width: 27, height: 18 },
-  "stat-total": { src: statTotalUrl, width: 24, height: 23.9883 },
-  trash: { src: trashUrl, width: 16, height: 16 },
-  undo: { src: undoUrl, width: 16, height: 16 },
 } as const
 
-export type IconName = keyof typeof icons
-export const iconNames = Object.keys(icons) as IconName[]
+export type IconName = keyof typeof ink | keyof typeof images
+export const iconNames = [
+  ...Object.keys(ink),
+  ...Object.keys(images),
+] as IconName[]
+
+type IconProps = {
+  name: IconName
+  /** Set only when the icon is the sole content of its control. */
+  label?: string
+  className?: string
+}
 
 /**
  * Decorative Figma icon. Pass `label` only when the icon is the sole content
  * of its control; otherwise it is hidden from assistive technology.
  */
-export function Icon({
-  name,
-  label,
-  className,
-  ...props
-}: Omit<React.ComponentProps<"img">, "src" | "alt" | "width" | "height"> & {
-  name: IconName
-  label?: string
-}) {
-  const { src, width, height } = icons[name]
-  return (
-    <img
-      data-slot="icon"
-      src={src}
-      width={width}
-      height={height}
-      alt={label ?? ""}
-      aria-hidden={label ? undefined : true}
-      draggable={false}
-      className={cn("pointer-events-none shrink-0 select-none", className)}
-      {...props}
-    />
+export function Icon({ name, label, className }: IconProps) {
+  const clipId = React.useId().replaceAll(":", "")
+  const image = name in images ? images[name as keyof typeof images] : null
+  if (image) {
+    return (
+      <img
+        data-slot="icon"
+        src={image.src}
+        width={image.width}
+        height={image.height}
+        alt={label ?? ""}
+        aria-hidden={label ? undefined : true}
+        draggable={false}
+        className={cn("pointer-events-none shrink-0 select-none", className)}
+      />
+    )
+  }
+
+  const aria = label
+    ? `role="img" aria-label="${escapeAttr(label)}"`
+    : `aria-hidden="true"`
+  const svg = uniquify(ink[name as keyof typeof ink], clipId).replace(
+    "<svg ",
+    `<svg data-slot="icon" focusable="false" class="${escapeAttr(
+      cn("pointer-events-none shrink-0 select-none", className)
+    )}" ${aria} `
   )
+
+  return <span className="contents" dangerouslySetInnerHTML={{ __html: svg }} />
 }

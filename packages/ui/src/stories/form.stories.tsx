@@ -65,3 +65,6 @@ export const Invalid: Story = {
     )
   },
 }
+
+export const DefaultDark: Story = { ...Default, globals: { theme: "dark" } }
+export const InvalidDark: Story = { ...Invalid, globals: { theme: "dark" } }
