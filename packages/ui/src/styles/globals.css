@@ -101,6 +101,41 @@
   --fc-shadow: rgb(0 0 0 / 0.55);
 }
 
+/*
+ * No-JS fallback. The class above is added by the pre-paint script, so a
+ * first visit with JavaScript disabled and no cookie would otherwise stay
+ * on the light tokens. System (and a missing explicit choice) follows the
+ * OS here. An explicit light or dark choice sets data-theme and is left
+ * alone, even when the OS disagrees. Keep these values identical to `.dark`.
+ */
+@media (prefers-color-scheme: dark) {
+  :root[data-theme="system"] {
+    color-scheme: dark;
+    --background: #1a100b;
+    --foreground: #f7f3f0;
+    --card: #2c1c14;
+    --card-foreground: #f7f3f0;
+    --popover: #2c1c14;
+    --popover-foreground: #f7f3f0;
+    --primary: #f8cb46;
+    --primary-foreground: var(--ink);
+    --secondary: #3a281c;
+    --secondary-foreground: #f7f3f0;
+    --muted: #3a281c;
+    --muted-foreground: #d4c4b4;
+    --accent: #3a281c;
+    --accent-foreground: #f7f3f0;
+    --destructive: #ff8ab5;
+    --border: #f6efe8;
+    --input: #f6efe8;
+    --ring: #92adeb;
+    --link: #92adeb;
+    --focus-gap: #1a100b;
+    --overlay: rgb(8 4 2 / 0.75);
+    --fc-shadow: rgb(0 0 0 / 0.55);
+  }
+}
+
 @theme inline {
   --font-sans: "Poppins", ui-sans-serif, system-ui, sans-serif;
   --font-heading: var(--font-sans);

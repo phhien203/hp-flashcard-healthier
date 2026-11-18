@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest"
 
 import { contrastRatio } from "./color"
-import { palette, themeColors } from "./tokens"
+import { clerkAppearance, palette, themeColors } from "./tokens"
 
 function probe(variable: string, dark: boolean) {
   const el = document.createElement("div")
@@ -11,6 +11,57 @@ function probe(variable: string, dark: boolean) {
   const value = getComputedStyle(el).color
   el.remove()
   return value.replaceAll(" ", "")
+}
+
+function walk(rules: CSSRuleList, visit: (rule: CSSRule) => void) {
+  for (const rule of rules) {
+    visit(rule)
+    if (rule instanceof CSSGroupingRule) walk(rule.cssRules, visit)
+  }
+}
+
+function sheetRules(): CSSRuleList[] {
+  const lists: CSSRuleList[] = []
+  for (const sheet of document.styleSheets) {
+    try {
+      lists.push(sheet.cssRules)
+    } catch {
+      // A cross-origin sheet has no readable rules.
+    }
+  }
+  return lists
+}
+
+function findStyleRule(selector: string): CSSStyleRule | null {
+  let found: CSSStyleRule | null = null
+  for (const rules of sheetRules()) {
+    walk(rules, (rule) => {
+      if (!(rule instanceof CSSStyleRule)) return
+      if (rule.parentRule instanceof CSSMediaRule) return
+      if (rule.selectorText === selector) found = rule
+    })
+  }
+  return found
+}
+
+function findMediaStyleRule(
+  condition: string,
+  selector: string
+): CSSStyleRule | null {
+  let found: CSSStyleRule | null = null
+  for (const rules of sheetRules()) {
+    walk(rules, (rule) => {
+      if (!(rule instanceof CSSMediaRule)) return
+      const text = rule.conditionText.replaceAll(" ", "")
+      if (!text.includes(condition.replaceAll(" ", ""))) return
+      for (const inner of rule.cssRules) {
+        if (!(inner instanceof CSSStyleRule)) continue
+        if (!inner.selectorText.includes(selector)) continue
+        found = inner
+      }
+    })
+  }
+  return found
 }
 
 function rgb(hex: string) {
@@ -95,6 +146,43 @@ describe("theme contrast", () => {
     ],
   ])("%s clears WCAG AA", (_name, foreground, background) => {
     expect(contrastRatio(foreground, background)).toBeGreaterThanOrEqual(4.5)
+  })
+
+  it("gives Clerk field borders at least 3:1 against the card", () => {
+    expect(
+      contrastRatio(themeColors.dark.border, themeColors.dark.card)
+    ).toBeGreaterThanOrEqual(3)
+    expect(
+      contrastRatio(themeColors.light.border, themeColors.light.card)
+    ).toBeGreaterThanOrEqual(3)
+    expect(clerkAppearance.elements.formFieldInput.borderColor).toBe(
+      "var(--border)"
+    )
+    expect(clerkAppearance.elements.formFieldInput.boxShadow).toBe("none")
+  })
+
+  it("follows a dark OS for System and keeps that palette equal to .dark", () => {
+    const darkRule = findStyleRule(".dark")
+    const systemRule = findMediaStyleRule(
+      "(prefers-color-scheme: dark)",
+      '[data-theme="system"]'
+    )
+    if (!darkRule || !systemRule) {
+      throw new Error("missing dark or system color rule")
+    }
+    for (let index = 0; index < darkRule.style.length; index += 1) {
+      const name = darkRule.style.item(index)
+      if (!name.startsWith("--") && name !== "color-scheme") continue
+      expect(systemRule.style.getPropertyValue(name)).toBe(
+        darkRule.style.getPropertyValue(name)
+      )
+    }
+    expect(systemRule.style.getPropertyValue("--background").trim()).toBe(
+      themeColors.dark.background
+    )
+    expect(systemRule.style.getPropertyValue("color-scheme").trim()).toBe(
+      "dark"
+    )
   })
 
   it("keeps semantic colors in sync with the stylesheet", () => {

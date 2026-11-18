@@ -3,6 +3,7 @@ import { afterEach, describe, expect, it, vi } from "vitest"
 import {
   DEFAULT_THEME,
   parseThemePreference,
+  readBroadcastChoice,
   readCookie,
   readThemeChoice,
   RESOLVED_COOKIE,
@@ -31,12 +32,36 @@ function query(matches: boolean): SystemSchemeQuery & {
   }
 }
 
+function installMatchMedia(matches: boolean) {
+  vi.spyOn(window, "matchMedia").mockImplementation((media: string) => {
+    return {
+      matches: media.includes("prefers-color-scheme: dark") ? matches : false,
+      media,
+      onchange: null,
+      addListener() {},
+      removeListener() {},
+      addEventListener() {},
+      removeEventListener() {},
+      dispatchEvent() {
+        return false
+      },
+    } as MediaQueryList
+  })
+}
+
+function runInitScript() {
+  const run = new Function(themeInitScript)
+  run()
+}
+
 describe("theme preference", () => {
   afterEach(() => {
     document.cookie = `${THEME_COOKIE}=; Path=/; Max-Age=0`
     document.cookie = `${RESOLVED_COOKIE}=; Path=/; Max-Age=0`
     document.documentElement.classList.remove("dark")
     document.documentElement.style.colorScheme = ""
+    document.documentElement.removeAttribute("data-theme")
+    document.querySelector('meta[name="theme-color"]')?.remove()
     vi.restoreAllMocks()
   })
 
@@ -72,10 +97,11 @@ describe("theme preference", () => {
     })
   })
 
-  it("prefers the client hint over the stored scheme, then light", () => {
-    expect(systemSchemeFromRequest("dark", "fc-color=light")).toBe("dark")
-    expect(systemSchemeFromRequest(null, "fc-color=dark")).toBe("dark")
-    expect(systemSchemeFromRequest("nope", null)).toBe("light")
+  it("uses the stored scheme, then light", () => {
+    expect(systemSchemeFromRequest("fc-color=dark")).toBe("dark")
+    expect(systemSchemeFromRequest("fc-color=light")).toBe("light")
+    expect(systemSchemeFromRequest(null)).toBe("light")
+    expect(systemSchemeFromRequest("fc-color=nope")).toBe("light")
   })
 
   it("persists the choice in cookies that survive a reload", () => {
@@ -86,6 +112,38 @@ describe("theme preference", () => {
     })
     writeThemeCookies("system", "light")
     expect(readThemeChoice(document.cookie, "dark").preference).toBe("system")
+  })
+
+  it("does not persist System for a visit that never chose, and skips an unchanged write", () => {
+    writeThemeCookies("system", "dark")
+    expect(readCookie(document.cookie, THEME_COOKIE)).toBeNull()
+    expect(readCookie(document.cookie, RESOLVED_COOKIE)).toBe("dark")
+
+    const proto = Object.getOwnPropertyDescriptor(Document.prototype, "cookie")
+    if (!proto || !proto.get || !proto.set) {
+      throw new Error("document.cookie is not configurable")
+    }
+    const { get, set } = proto
+    let writes = 0
+    Object.defineProperty(document, "cookie", {
+      configurable: true,
+      get() {
+        return get.call(this)
+      },
+      set(value: string) {
+        writes += 1
+        set.call(this, value)
+      },
+    })
+    try {
+      writeThemeCookies("system", "dark")
+      expect(writes).toBe(0)
+      writeThemeCookies("light", "dark")
+      expect(writes).toBe(1)
+      expect(readCookie(document.cookie, THEME_COOKIE)).toBe("light")
+    } finally {
+      Reflect.deleteProperty(document, "cookie")
+    }
   })
 
   it("follows OS changes only while System is selected, then detaches", () => {
@@ -119,8 +177,9 @@ describe("theme preference", () => {
     expect(calls.at(-1)).toBe("light")
   })
 
-  it("does not throw when cookie access is blocked", () => {
+  it("does not throw when cookie access is blocked, and still follows the OS", () => {
     expect(themeInitScript).not.toContain("localStorage")
+    installMatchMedia(true)
     const own = Object.getOwnPropertyDescriptor(document, "cookie")
     Object.defineProperty(document, "cookie", {
       configurable: true,
@@ -132,25 +191,84 @@ describe("theme preference", () => {
       },
     })
     try {
-      expect(() => {
-        const run = new Function(themeInitScript)
-        run()
-      }).not.toThrow()
+      expect(() => runInitScript()).not.toThrow()
+      expect(document.documentElement.classList.contains("dark")).toBe(true)
+      expect(document.documentElement.dataset.theme).toBe("system")
     } finally {
       if (own) Object.defineProperty(document, "cookie", own)
       else Reflect.deleteProperty(document, "cookie")
     }
   })
 
-  it("survives matchMedia throwing and still applies a class", () => {
+  it("paints an explicit choice and treats an invalid cookie as System", () => {
+    installMatchMedia(false)
+    document.cookie = `${THEME_COOKIE}=dark`
+    runInitScript()
+    expect(document.documentElement.classList.contains("dark")).toBe(true)
+    expect(document.documentElement.dataset.theme).toBe("dark")
+
+    document.documentElement.classList.remove("dark")
+    installMatchMedia(true)
+    document.cookie = `${THEME_COOKIE}=light`
+    runInitScript()
+    expect(document.documentElement.classList.contains("dark")).toBe(false)
+    expect(document.documentElement.dataset.theme).toBe("light")
+
+    installMatchMedia(true)
+    document.cookie = `${THEME_COOKIE}=system`
+    runInitScript()
+    expect(document.documentElement.classList.contains("dark")).toBe(true)
+    expect(document.documentElement.dataset.theme).toBe("system")
+
+    document.documentElement.classList.remove("dark")
+    document.cookie = `${THEME_COOKIE}=sepia`
+    runInitScript()
+    expect(document.documentElement.classList.contains("dark")).toBe(true)
+    expect(document.documentElement.dataset.theme).toBe("system")
+  })
+
+  it("keeps the stored scheme when matchMedia throws, and does not rewrite a matching cookie", () => {
     vi.spyOn(window, "matchMedia").mockImplementation(() => {
       throw new Error("no matchMedia")
     })
     document.cookie = `${THEME_COOKIE}=system`
-    expect(() => {
-      const run = new Function(themeInitScript)
-      run()
-    }).not.toThrow()
-    vi.restoreAllMocks()
+    document.cookie = `${RESOLVED_COOKIE}=dark`
+    const proto = Object.getOwnPropertyDescriptor(Document.prototype, "cookie")
+    if (!proto || !proto.get || !proto.set) {
+      throw new Error("document.cookie is not configurable")
+    }
+    const { get, set } = proto
+    let writes = 0
+    Object.defineProperty(document, "cookie", {
+      configurable: true,
+      get() {
+        return get.call(this)
+      },
+      set(value: string) {
+        writes += 1
+        set.call(this, value)
+      },
+    })
+    try {
+      expect(() => runInitScript()).not.toThrow()
+      expect(writes).toBe(0)
+      expect(document.documentElement.classList.contains("dark")).toBe(true)
+      expect(document.documentElement.dataset.theme).toBe("system")
+    } finally {
+      Reflect.deleteProperty(document, "cookie")
+    }
+  })
+
+  it("ignores a broadcast that is not a theme choice", () => {
+    expect(readBroadcastChoice(null)).toBeNull()
+    expect(readBroadcastChoice({ preference: "sepia", resolved: "dark" })).toBe(
+      null
+    )
+    expect(readBroadcastChoice({ preference: "dark", resolved: "nope" })).toBe(
+      null
+    )
+    expect(
+      readBroadcastChoice({ preference: "dark", resolved: "dark" })
+    ).toEqual({ preference: "dark", resolved: "dark" })
   })
 })

@@ -8,15 +8,15 @@ import {
 import type { ThemeChoice } from "@workspace/ui/lib/theme"
 
 /**
- * Theme for this request. A `Sec-CH-Prefers-Color-Scheme` hint wins, then the
- * resolved cookie from the last visit, then light. The pre-paint script is
- * what keeps System in step with the live OS; this only seeds the SSR markup.
+ * Theme for this request. The resolved cookie from the last visit seeds
+ * System; otherwise the markup is light and the stylesheet's
+ * `prefers-color-scheme` rule paints a dark OS before JavaScript runs.
+ * The pre-paint script keeps System in step with the live OS once JS runs.
  */
 export const readTheme = createServerFn({ method: "GET" }).handler(
   async (): Promise<ThemeChoice> => {
     const request = getRequest()
-    const hint = request.headers.get("sec-ch-prefers-color-scheme")
     const cookies = request.headers.get("cookie")
-    return readThemeChoice(cookies, systemSchemeFromRequest(hint, cookies))
+    return readThemeChoice(cookies, systemSchemeFromRequest(cookies))
   }
 )

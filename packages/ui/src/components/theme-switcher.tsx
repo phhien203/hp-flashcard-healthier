@@ -5,10 +5,14 @@ import type { ThemePreference } from "@workspace/ui/lib/theme"
 import { cn } from "@workspace/ui/lib/utils"
 
 const OPTIONS = [
-  { value: "light", label: "Light" },
-  { value: "dark", label: "Dark" },
-  { value: "system", label: "System" },
-] as const satisfies ReadonlyArray<{ value: ThemePreference; label: string }>
+  { value: "light", label: "Light", short: "L" },
+  { value: "dark", label: "Dark", short: "D" },
+  { value: "system", label: "System", short: "S" },
+] as const satisfies ReadonlyArray<{
+  value: ThemePreference
+  label: string
+  short: string
+}>
 
 /**
  * Light / Dark / System choice. A radiogroup so arrow keys move the selection,
@@ -65,15 +69,17 @@ export function ThemeSwitcher({ className }: { className?: string }) {
             role="radio"
             aria-checked={checked}
             tabIndex={checked ? 0 : -1}
+            aria-label={option.label}
             onClick={() => setPreference(option.value)}
             className={cn(
-              "cursor-pointer rounded-full px-2.5 py-1 text-preset-6 font-semibold focus-ring transition-[background-color,color] duration-150 sm:px-3 sm:py-1.5 sm:text-preset-5",
+              "cursor-pointer rounded-full px-1.5 py-1 text-preset-6 font-semibold focus-ring transition-[background-color,color] duration-150 sm:px-3 sm:py-1.5 sm:text-preset-5",
               checked
                 ? "bg-primary text-primary-foreground"
                 : "text-foreground hover:bg-muted"
             )}
           >
-            {option.label}
+            <span className="sm:hidden">{option.short}</span>
+            <span className="hidden sm:inline">{option.label}</span>
           </button>
         )
       })}

@@ -69,12 +69,24 @@ function RootDocument({ children }: { children: React.ReactNode }) {
     () => serverTheme
   )
   const resolved = theme.resolved
+  // System omits the inline color-scheme so the prefers-color-scheme rule
+  // can paint a dark OS when this script never runs. An explicit choice wins.
+  const colorScheme =
+    theme.preference === "system" ? undefined : { colorScheme: resolved }
+  const appearance = React.useMemo(
+    () => ({
+      ...clerkAppearance,
+      ...(resolved === "dark" ? { theme: dark } : {}),
+    }),
+    [resolved]
+  )
 
   return (
     <html
       lang="en"
       className={themeClassName(resolved)}
-      style={{ colorScheme: resolved }}
+      data-theme={theme.preference}
+      style={colorScheme}
       suppressHydrationWarning
     >
       <head>
@@ -88,16 +100,16 @@ function RootDocument({ children }: { children: React.ReactNode }) {
           content={themeColor(resolved)}
           suppressHydrationWarning
         />
+        {/*
+          Inline on purpose: it has to run before first paint. A CSP that
+          blocks inline scripts needs a nonce on this tag. The body is a
+          build-time constant.
+        */}
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
         <HeadContent />
       </head>
       <body className="min-h-svh">
-        <ClerkProvider
-          appearance={{
-            ...clerkAppearance,
-            ...(resolved === "dark" ? { theme: dark } : {}),
-          }}
-        >
+        <ClerkProvider appearance={appearance}>
           <ThemeProvider preference={theme.preference} resolved={resolved}>
             {children}
             <Toaster theme={resolved} />

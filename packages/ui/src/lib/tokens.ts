@@ -68,6 +68,29 @@ const linkStyle = {
 } as const
 
 /**
+ * Clerk paints input chrome from `colorNeutral` at low alpha (`borderAlpha150`
+ * plus a matching shadow), not from `colorBorder`. In dark that translucent
+ * edge is about 2.3:1 on the card. A solid semantic border clears the 3:1
+ * non-text requirement in both themes.
+ */
+const fieldBorder = {
+  borderColor: "var(--border)",
+  boxShadow: "none",
+  "&:hover": {
+    borderColor: "var(--border)",
+    boxShadow: "none",
+  },
+  "&:focus": {
+    borderColor: "var(--ring)",
+    boxShadow: "none",
+  },
+  "&:focus-visible": {
+    borderColor: "var(--ring)",
+    boxShadow: "none",
+  },
+} as const
+
+/**
  * Clerk sign-in / sign-up / user menu. Colors point at the semantic CSS
  * variables, so the pre-paint theme class restyles Clerk without waiting for
  * hydration. Text links use `--link` rather than the yellow primary, which
@@ -95,6 +118,11 @@ export const clerkAppearance = {
     formFieldAction: linkStyle,
     formResendCodeLink: linkStyle,
     identityPreviewEditButton: linkStyle,
+    formFieldInput: fieldBorder,
+    otpCodeFieldInput: fieldBorder,
+    phoneInputBox: fieldBorder,
+    selectButton: fieldBorder,
+    selectSearchInput: fieldBorder,
     formButtonPrimary: {
       backgroundColor: "var(--primary)",
       color: "var(--primary-foreground)",

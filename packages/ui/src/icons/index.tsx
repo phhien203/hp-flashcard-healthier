@@ -41,6 +41,27 @@ function toInk(svg: string) {
   return svg.replace(INK_FILL, 'fill="currentColor"')
 }
 
+/** Drop the Figma export's `display:block` and non-uniform scaling. */
+function prepareSvg(svg: string) {
+  return svg
+    .replace(/\sstyle="[^"]*"/g, "")
+    .replace(/\spreserveAspectRatio="none"/g, "")
+}
+
+/**
+ * Pin the export's own width and height so a parent rule like
+ * `[&_svg:not([class*='size-'])]:size-4` cannot stretch a non-square icon
+ * (the card-actions dots are 3.375×14). A caller that passes `size-*` keeps
+ * control, and the aspect ratio is preserved because `none` was removed.
+ */
+function lockIntrinsicSize(svg: string, className: string | undefined) {
+  if (className?.includes("size-")) return ""
+  const width = /\swidth="([\d.]+)"/.exec(svg)?.[1]
+  const height = /\sheight="([\d.]+)"/.exec(svg)?.[1]
+  if (!width || !height) return ""
+  return ` style="width:${width}px;height:${height}px"`
+}
+
 function escapeAttr(value: string) {
   return value
     .replaceAll("&", "&amp;")
@@ -125,11 +146,12 @@ export function Icon({ name, label, className }: IconProps) {
   const aria = label
     ? `role="img" aria-label="${escapeAttr(label)}"`
     : `aria-hidden="true"`
-  const svg = uniquify(ink[name as keyof typeof ink], clipId).replace(
+  const prepared = uniquify(prepareSvg(ink[name as keyof typeof ink]), clipId)
+  const svg = prepared.replace(
     "<svg ",
     `<svg data-slot="icon" focusable="false" class="${escapeAttr(
       cn("pointer-events-none shrink-0 select-none", className)
-    )}" ${aria} `
+    )}" ${aria}${lockIntrinsicSize(prepared, className)} `
   )
 
   return <span className="contents" dangerouslySetInnerHTML={{ __html: svg }} />

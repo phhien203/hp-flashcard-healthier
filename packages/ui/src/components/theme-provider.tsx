@@ -1,9 +1,11 @@
 import React from "react"
 
 import {
+  broadcastThemeChoice,
   publishTheme,
   type ResolvedTheme,
   subscribeSystemScheme,
+  subscribeThemeBroadcast,
   type ThemePreference,
   writeThemeCookies,
 } from "@workspace/ui/lib/theme"
@@ -37,9 +39,11 @@ function systemQuery(): MediaQueryList {
 
 /**
  * Owns the saved Light / Dark / System choice. The initial values come from
- * the server (cookie + client hint) so the first render matches SSR. A
- * layout effect then follows the live OS scheme when the choice is System
- * and drops that listener when it is not.
+ * the server (the preference cookie, or the last resolved color) so the
+ * first render matches SSR. A layout effect then follows the live OS scheme
+ * when the choice is System and drops that listener when it is not. A choice
+ * made here is announced to other tabs; a choice that arrives from another
+ * tab is applied and not announced again.
  */
 export function ThemeProvider({
   preference: initialPreference,
@@ -50,24 +54,47 @@ export function ThemeProvider({
   resolved: ResolvedTheme
   children: React.ReactNode
 }) {
-  const [preference, setPreference] = React.useState(initialPreference)
+  const [preference, setPreferenceState] = React.useState(initialPreference)
   const [resolved, setResolved] = React.useState(initialResolved)
+  const announce = React.useRef(false)
+
+  const setPreference = React.useCallback((next: ThemePreference) => {
+    announce.current = true
+    setPreferenceState(next)
+  }, [])
 
   React.useLayoutEffect(() => {
-    setPreference(initialPreference)
+    setPreferenceState(initialPreference)
   }, [initialPreference])
 
   React.useLayoutEffect(() => {
     return subscribeSystemScheme(preference, systemQuery(), (next) => {
-      publishTheme({ preference, resolved: next })
+      const choice = { preference, resolved: next }
+      publishTheme(choice)
       writeThemeCookies(preference, next)
       setResolved((current) => (current === next ? current : next))
+      if (announce.current) {
+        announce.current = false
+        broadcastThemeChoice(choice)
+      }
     })
   }, [preference])
 
+  React.useLayoutEffect(() => {
+    return subscribeThemeBroadcast((choice) => {
+      announce.current = false
+      setPreferenceState(choice.preference)
+      publishTheme(choice)
+      writeThemeCookies(choice.preference, choice.resolved)
+      setResolved((current) =>
+        current === choice.resolved ? current : choice.resolved
+      )
+    })
+  }, [])
+
   const value = React.useMemo(
     () => ({ preference, resolved, setPreference }),
-    [preference, resolved]
+    [preference, resolved, setPreference]
   )
 
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>
