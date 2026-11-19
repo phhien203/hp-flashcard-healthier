@@ -187,6 +187,11 @@ describe("theme contrast", () => {
     expect(
       contrastRatio(themeColors.light.ring, themeColors.light.card)
     ).toBeGreaterThanOrEqual(3)
+    // The ring's inner neighbor is the focus gap (the dark page) and its
+    // outer neighbor is the card. Light gap and light card are the same white.
+    expect(
+      contrastRatio(themeColors.dark.ring, themeColors.dark.background)
+    ).toBeGreaterThanOrEqual(3)
 
     const input = clerkAppearance.elements.formFieldInput
     const variant =
@@ -198,12 +203,26 @@ describe("theme contrast", () => {
     expect(input.borderColor).toBe("var(--border)")
     expect(input.boxShadow).toBe("none")
     expect(input["&:hover"].boxShadow).toBe("none")
+    const focus =
+      input[
+        '&:focus, &:focus-visible, &:focus-within, &[data-focus-within="true"]'
+      ]
+    expect(focus.borderWidth).toBe("1px")
+    expect(focus.borderColor).toBe("var(--border)")
+    expect(focus.boxShadow).toBe(
+      "0 0 0 2px var(--focus-gap), 0 0 0 5px var(--ring)"
+    )
     expect(variant.borderWidth).toBe("1px")
     expect(variant.borderStyle).toBe("solid")
     expect(variant.borderColor).toBe("var(--border)")
     expect(variant.boxShadow).toBe("none")
     expect(variant["&:hover"].boxShadow).toBe("none")
     expect(variant["&:hover"].borderWidth).toBe("1px")
+    expect(
+      variant[
+        '&:focus, &:focus-visible, &:focus-within, &[data-focus-within="true"]'
+      ].boxShadow
+    ).toBe(focus.boxShadow)
     expect(clerkAppearance.elements.otpCodeFieldInput).toBe(input)
     expect(clerkAppearance.elements.phoneInputBox).toBe(input)
     expect(clerkAppearance.elements.selectButton).toBe(input)
@@ -216,7 +235,9 @@ describe("theme contrast", () => {
     style.textContent = [
       '.probe[data-variant="default"]{border-width:0;box-shadow:0px 0px 0px 1px rgba(246,239,232,0.24)}',
       '.probe[data-variant="default"]:hover{box-shadow:0px 0px 0px 1px rgba(246,239,232,0.45)}',
+      '.probe[data-variant="default"]:focus,.probe[data-variant="outline"]:focus,.probe[data-focus-within="true"]{border-width:0;box-shadow:0px 0px 0px 1px rgba(146,173,235,0.45)}',
       ".phone{border-width:0;box-shadow:0px 0px 0px 1px rgba(46,20,1,0.2)}",
+      ".phone:focus-within{box-shadow:0px 0px 0px 1px rgba(146,173,235,0.45)}",
       emitCss(".probe", field),
       emitCss(".phone", field),
     ].join("")
@@ -259,11 +280,37 @@ describe("theme contrast", () => {
       expect(edge(input).shadow).toBe("none")
       expect(edge(input).width).toBe("1px")
       input.focus()
-      expect(edge(input)).toMatchObject({
-        width: "1px",
-        color: rgb(colors.ring),
-        shadow: "none",
-      })
+      const focused = edge(input).shadow.replaceAll(" ", "")
+      expect(edge(input).width).toBe("1px")
+      expect(edge(input).color).toBe(rgb(colors.border))
+      expect(focused).toContain(rgb(colors.ring))
+      expect(focused).toContain("0px0px0px5px")
+      const otp = document.createElement("div")
+      otp.className = "probe"
+      otp.dataset.variant = "default"
+      otp.dataset.focusWithin = "true"
+      root.append(otp)
+      const otpShadow = edge(otp).shadow.replaceAll(" ", "")
+      expect(edge(otp).color).toBe(rgb(colors.border))
+      expect(otpShadow).toContain(rgb(colors.ring))
+      expect(otpShadow).toContain("0px0px0px5px")
+      const select = document.createElement("button")
+      select.className = "probe"
+      select.dataset.variant = "outline"
+      root.append(select)
+      select.focus()
+      const selectShadow = edge(select).shadow.replaceAll(" ", "")
+      expect(edge(select).width).toBe("1px")
+      expect(edge(select).color).toBe(rgb(colors.border))
+      expect(selectShadow).toContain(rgb(colors.ring))
+      const inner = document.createElement("input")
+      phone.append(inner)
+      inner.focus()
+      const phoneShadow = edge(phone).shadow.replaceAll(" ", "")
+      expect(edge(phone).width).toBe("1px")
+      expect(edge(phone).color).toBe(rgb(colors.border))
+      expect(phoneShadow).toContain(rgb(colors.ring))
+      expect(phoneShadow).toContain("0px0px0px5px")
       root.remove()
     }
 

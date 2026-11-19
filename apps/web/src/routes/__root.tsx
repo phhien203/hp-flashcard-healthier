@@ -1,6 +1,7 @@
 import React from "react"
 
 import { ClerkProvider } from "@clerk/tanstack-react-start"
+import { ui } from "@clerk/ui"
 import { dark } from "@clerk/ui/themes"
 import {
   createRootRouteWithContext,
@@ -112,7 +113,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <HeadContent />
       </head>
       <body className="min-h-svh">
-        <ClerkProvider appearance={appearance}>
+        <ClerkProvider ui={ui} appearance={appearance}>
           <ThemeProvider preference={theme.preference} resolved={resolved}>
             {children}
             <Toaster theme={resolved} />

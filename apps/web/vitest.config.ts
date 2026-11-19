@@ -9,7 +9,11 @@ export default defineProject({
   resolve: { tsconfigPaths: true },
   // Pre-bundle the deps Vite otherwise discovers mid-run and reloads on.
   optimizeDeps: {
-    include: ["@clerk/tanstack-react-start", "@tanstack/react-router"],
+    include: [
+      "@clerk/tanstack-react-start",
+      "@clerk/ui",
+      "@tanstack/react-router",
+    ],
   },
   // Fonts and other assets live in the workspace's pnpm store, outside this package.
   server: { fs: { allow: ["../.."] } },

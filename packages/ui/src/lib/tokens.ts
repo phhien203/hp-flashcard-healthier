@@ -74,7 +74,12 @@ const linkStyle = {
  * beats a `box-shadow: none` on the element, so the shadow stays and a
  * `border-color` never paints. Repeat the solid border at the same
  * specificity, including hover and focus, and give it a real width.
- * `--border` on the card clears 3:1 in both themes; focus uses `--ring`.
+ *
+ * Focus keeps that resting border. Recoloring the 1px edge to `--ring` is
+ * only about 2:1 against the dark border, so the change disappears. A 2px
+ * `--focus-gap` then a 3px `--ring` sits outside the border. The ring is
+ * adjacent to the gap and the card, both of which it clears at 3:1, and
+ * the band is thicker than the WCAG 2.4.11 minimum of 2px.
  */
 const restBorder = {
   borderWidth: "1px",
@@ -86,8 +91,8 @@ const restBorder = {
 const focusBorder = {
   borderWidth: "1px",
   borderStyle: "solid",
-  borderColor: "var(--ring)",
-  boxShadow: "none",
+  borderColor: "var(--border)",
+  boxShadow: "0 0 0 2px var(--focus-gap), 0 0 0 5px var(--ring)",
 } as const
 
 const fieldFocus =
