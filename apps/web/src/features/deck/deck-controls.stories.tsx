@@ -30,3 +30,6 @@ export const Default: Story = {}
 export const Filtered: Story = {
   args: { selectedCategories: ["CSS"], hideMastered: true },
 }
+
+export const DefaultDark: Story = { ...Default, globals: { theme: "dark" } }
+export const FilteredDark: Story = { ...Filtered, globals: { theme: "dark" } }

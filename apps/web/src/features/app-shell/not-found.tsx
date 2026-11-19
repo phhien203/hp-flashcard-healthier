@@ -8,21 +8,29 @@ import {
   EmptyHeader,
   EmptyTitle,
 } from "@workspace/ui/components/empty"
+import { ThemeSwitcher } from "@workspace/ui/components/theme-switcher"
 
 export function NotFound() {
   return (
-    <Empty className="min-h-svh">
-      <EmptyHeader>
-        <EmptyTitle>Page not found</EmptyTitle>
-        <EmptyDescription>
-          That page doesn’t exist. Let’s get you back to your cards.
-        </EmptyDescription>
-      </EmptyHeader>
-      <EmptyContent>
-        <Button variant="raised" asChild>
-          <Link to="/study">Go to Study Mode</Link>
-        </Button>
-      </EmptyContent>
-    </Empty>
+    <div className="relative min-h-svh">
+      <header className="absolute top-4 right-4 z-10">
+        <ThemeSwitcher />
+      </header>
+      <main>
+        <Empty className="min-h-svh">
+          <EmptyHeader>
+            <EmptyTitle>Page not found</EmptyTitle>
+            <EmptyDescription>
+              That page doesn’t exist. Let’s get you back to your cards.
+            </EmptyDescription>
+          </EmptyHeader>
+          <EmptyContent>
+            <Button variant="raised" asChild>
+              <Link to="/study">Go to Study Mode</Link>
+            </Button>
+          </EmptyContent>
+        </Empty>
+      </main>
+    </div>
   )
 }

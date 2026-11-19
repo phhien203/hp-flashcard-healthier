@@ -21,7 +21,7 @@ function Checkbox({
     >
       <CheckboxPrimitive.Indicator
         data-slot="checkbox-indicator"
-        className="absolute -inset-px"
+        className="absolute -inset-px text-ink"
       >
         <Icon name="checkbox-checked" className="size-4" />
       </CheckboxPrimitive.Indicator>

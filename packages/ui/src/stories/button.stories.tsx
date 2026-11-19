@@ -113,3 +113,11 @@ export const AllVariants: Story = {
     </div>
   ),
 }
+
+export const PrimaryDark: Story = { ...Primary, globals: { theme: "dark" } }
+export const RaisedDark: Story = { ...Raised, globals: { theme: "dark" } }
+export const OutlineDark: Story = { ...Outline, globals: { theme: "dark" } }
+export const AllVariantsDark: Story = {
+  ...AllVariants,
+  globals: { theme: "dark" },
+}

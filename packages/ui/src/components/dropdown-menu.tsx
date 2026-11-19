@@ -115,7 +115,7 @@ function DropdownMenuCheckboxItem({
     >
       <span
         aria-hidden
-        className="relative size-4 shrink-0 rounded-xs border border-input bg-card"
+        className="relative size-4 shrink-0 rounded-xs border border-input bg-card text-ink"
         data-slot="dropdown-menu-checkbox-item-indicator"
       >
         <DropdownMenuPrimitive.ItemIndicator className="absolute -inset-px">

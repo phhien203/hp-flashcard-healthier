@@ -69,3 +69,14 @@ export const NoCardsYet: Story = {
     <CardGrid cards={[]} emptyReason="no-cards" onEdit={fn()} onDelete={fn()} />
   ),
 }
+
+export const CreateFormDark: Story = {
+  ...CreateForm,
+  globals: { theme: "dark" },
+}
+export const TileDark: Story = { ...Tile, globals: { theme: "dark" } }
+export const GridDark: Story = { ...Grid, globals: { theme: "dark" } }
+export const NoCardsYetDark: Story = {
+  ...NoCardsYet,
+  globals: { theme: "dark" },
+}

@@ -85,3 +85,21 @@ export const AllCaughtUp: Story = {
     </section>
   ),
 }
+
+export const QuestionFaceDark: Story = {
+  ...QuestionFace,
+  globals: { theme: "dark" },
+}
+export const AnswerFaceDark: Story = {
+  ...AnswerFace,
+  globals: { theme: "dark" },
+}
+export const StatisticsDark: Story = {
+  ...Statistics,
+  globals: { theme: "dark" },
+}
+export const SessionDark: Story = { ...Session, globals: { theme: "dark" } }
+export const AllCaughtUpDark: Story = {
+  ...AllCaughtUp,
+  globals: { theme: "dark" },
+}

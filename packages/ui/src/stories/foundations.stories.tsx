@@ -21,7 +21,7 @@ const COLORS = [
   ["teal/400", "bg-teal-400"],
   ["pink/400", "bg-pink-400"],
   ["pink/500", "bg-pink-500"],
-  ["pink/700 · destructive", "bg-pink-700"],
+  ["pink/700", "bg-pink-700"],
 ] as const
 
 export const Colors: Story = {
@@ -75,10 +75,20 @@ export const Icons: Story = {
             key={name}
             className="flex flex-col items-center gap-3 rounded-lg border border-border bg-card p-4"
           >
-            <Icon name={name} />
+            <Icon
+              name={name}
+              className={name === "checkbox-checked" ? "text-ink" : undefined}
+            />
             <code className="text-preset-6">{name}</code>
           </li>
         ))}
     </ul>
   ),
 }
+
+export const ColorsDark: Story = { ...Colors, globals: { theme: "dark" } }
+export const TypographyDark: Story = {
+  ...Typography,
+  globals: { theme: "dark" },
+}
+export const IconsDark: Story = { ...Icons, globals: { theme: "dark" } }

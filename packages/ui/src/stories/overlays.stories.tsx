@@ -210,3 +210,58 @@ export const Toasts: Story = {
     await waitFor(() => expect(toastText).toBeVisible())
   },
 }
+
+export const EditDialogOpen: Story = {
+  render: EditDialog.render,
+  play: async ({ canvas, userEvent }) => {
+    await userEvent.click(canvas.getByRole("button", { name: "Edit card" }))
+    await screen.findByRole("dialog", { name: "Edit your card" })
+  },
+}
+
+export const DeleteConfirmationOpen: Story = {
+  render: DeleteConfirmation.render,
+  play: async ({ canvas, userEvent }) => {
+    await userEvent.click(canvas.getByRole("button", { name: "Delete card" }))
+    await screen.findByRole("alertdialog", { name: "Delete this card?" })
+  },
+}
+
+export const CardActionsMenuOpen: Story = {
+  render: CardActionsMenu.render,
+  play: async ({ canvas, userEvent }) => {
+    await userEvent.click(canvas.getByRole("button", { name: "Card actions" }))
+    await screen.findByRole("menuitem", { name: "Edit" })
+  },
+}
+
+export const EditDialogOpenDark: Story = {
+  ...EditDialogOpen,
+  globals: { theme: "dark" },
+}
+export const DeleteConfirmationOpenDark: Story = {
+  ...DeleteConfirmationOpen,
+  globals: { theme: "dark" },
+}
+export const CategoryFilterDark: Story = {
+  ...CategoryFilter,
+  globals: { theme: "dark" },
+}
+export const CardActionsMenuOpenDark: Story = {
+  ...CardActionsMenuOpen,
+  globals: { theme: "dark" },
+}
+export const ToastsDark: Story = {
+  ...Toasts,
+  globals: { theme: "dark" },
+  play: async ({ canvas, userEvent }) => {
+    // The light toast story leaves its toast mounted on document.body.
+    toast.dismiss()
+    await waitFor(() =>
+      expect(screen.queryByText("Card created successfully.")).toBeNull()
+    )
+    await userEvent.click(canvas.getByRole("button", { name: "Created" }))
+    const toastText = await screen.findByText("Card created successfully.")
+    await waitFor(() => expect(toastText).toBeVisible())
+  },
+}
