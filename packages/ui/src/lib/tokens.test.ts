@@ -192,6 +192,12 @@ describe("theme contrast", () => {
     expect(
       contrastRatio(themeColors.dark.ring, themeColors.dark.background)
     ).toBeGreaterThanOrEqual(3)
+    expect(
+      contrastRatio(themeColors.light.destructive, themeColors.light.card)
+    ).toBeGreaterThanOrEqual(3)
+    expect(
+      contrastRatio(themeColors.dark.destructive, themeColors.dark.card)
+    ).toBeGreaterThanOrEqual(3)
 
     const input = clerkAppearance.elements.formFieldInput
     const variant =
@@ -223,6 +229,19 @@ describe("theme contrast", () => {
         '&:focus, &:focus-visible, &:focus-within, &[data-focus-within="true"]'
       ].boxShadow
     ).toBe(focus.boxShadow)
+    const error = input['&[data-feedback="error"]']
+    const errorFocus =
+      '&:focus, &:focus-visible, &:focus-within, &[data-focus-within="true"]' as const
+    expect(error.borderColor).toBe("var(--destructive)")
+    expect(error.borderWidth).toBe("1px")
+    expect(error.boxShadow).toBe("none")
+    expect(error["&:hover"].boxShadow).toBe("none")
+    expect(error["&:hover"].borderColor).toBe("var(--destructive)")
+    expect(error[errorFocus].borderColor).toBe("var(--destructive)")
+    expect(error[errorFocus].boxShadow).toBe(focus.boxShadow)
+    expect(variant['&[data-feedback="error"]'][errorFocus].boxShadow).toBe(
+      focus.boxShadow
+    )
     expect(clerkAppearance.elements.otpCodeFieldInput).toBe(input)
     expect(clerkAppearance.elements.phoneInputBox).toBe(input)
     expect(clerkAppearance.elements.selectButton).toBe(input)
@@ -238,6 +257,8 @@ describe("theme contrast", () => {
       '.probe[data-variant="default"]:focus,.probe[data-variant="outline"]:focus,.probe[data-focus-within="true"]{border-width:0;box-shadow:0px 0px 0px 1px rgba(146,173,235,0.45)}',
       ".phone{border-width:0;box-shadow:0px 0px 0px 1px rgba(46,20,1,0.2)}",
       ".phone:focus-within{box-shadow:0px 0px 0px 1px rgba(146,173,235,0.45)}",
+      '.probe[data-variant="default"][data-feedback="error"],.probe[data-variant="outline"][data-feedback="error"],.phone[data-feedback="error"]{border-width:0;box-shadow:0px 0px 0px 1px rgba(255,138,181,0.7)}',
+      '.probe[data-variant="default"][data-feedback="error"]:focus,.probe[data-variant="default"][data-feedback="error"]:focus-within,.probe[data-variant="default"][data-feedback="error"][data-focus-within="true"],.phone[data-feedback="error"]:focus-within{border-width:0;box-shadow:0px 0px 0px 1px rgba(255,138,181,0.9)}',
       emitCss(".probe", field),
       emitCss(".phone", field),
     ].join("")
@@ -311,6 +332,44 @@ describe("theme contrast", () => {
       expect(edge(phone).color).toBe(rgb(colors.border))
       expect(phoneShadow).toContain(rgb(colors.ring))
       expect(phoneShadow).toContain("0px0px0px5px")
+      const errored = document.createElement("input")
+      errored.className = "probe"
+      errored.dataset.variant = "default"
+      errored.dataset.feedback = "error"
+      root.append(errored)
+      expect(edge(errored)).toMatchObject({
+        width: "1px",
+        style: "solid",
+        color: rgb(colors.destructive),
+        shadow: "none",
+      })
+      errored.focus()
+      const erroredShadow = edge(errored).shadow.replaceAll(" ", "")
+      expect(edge(errored).color).toBe(rgb(colors.destructive))
+      expect(edge(errored).width).toBe("1px")
+      expect(erroredShadow).toContain(rgb(colors.ring))
+      expect(erroredShadow).toContain("0px0px0px5px")
+      const erroredOtp = document.createElement("div")
+      erroredOtp.className = "probe"
+      erroredOtp.dataset.variant = "default"
+      erroredOtp.dataset.feedback = "error"
+      erroredOtp.dataset.focusWithin = "true"
+      root.append(erroredOtp)
+      const erroredOtpShadow = edge(erroredOtp).shadow.replaceAll(" ", "")
+      expect(edge(erroredOtp).color).toBe(rgb(colors.destructive))
+      expect(erroredOtpShadow).toContain(rgb(colors.ring))
+      expect(erroredOtpShadow).toContain("0px0px0px5px")
+      phone.dataset.feedback = "error"
+      expect(edge(phone)).toMatchObject({
+        width: "1px",
+        color: rgb(colors.destructive),
+        shadow: "none",
+      })
+      inner.focus()
+      const phoneErrorShadow = edge(phone).shadow.replaceAll(" ", "")
+      expect(edge(phone).color).toBe(rgb(colors.destructive))
+      expect(phoneErrorShadow).toContain(rgb(colors.ring))
+      expect(phoneErrorShadow).toContain("0px0px0px5px")
       root.remove()
     }
 

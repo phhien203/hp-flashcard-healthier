@@ -95,20 +95,48 @@ const focusBorder = {
   boxShadow: "0 0 0 2px var(--focus-gap), 0 0 0 5px var(--ring)",
 } as const
 
+/**
+ * Clerk paints an error as another translucent shadow on
+ * `&[data-feedback="error"]`, including `:focus-within`. That beats the
+ * focus ring. A solid `--destructive` border keeps the error visible at
+ * rest (it clears 3:1 on the card), and focus adds the same ring.
+ */
+const errorBorder = {
+  borderWidth: "1px",
+  borderStyle: "solid",
+  borderColor: "var(--destructive)",
+  boxShadow: "none",
+} as const
+
+const errorFocus = {
+  borderWidth: "1px",
+  borderStyle: "solid",
+  borderColor: "var(--destructive)",
+  boxShadow: focusBorder.boxShadow,
+} as const
+
 const fieldFocus =
   '&:focus, &:focus-visible, &:focus-within, &[data-focus-within="true"]'
 
 const fieldVariant =
   '&[data-variant="default"], &[data-variant="outline"], &[data-variant="unstyled"]'
 
+const errorField = {
+  ...errorBorder,
+  "&:hover": errorBorder,
+  [fieldFocus]: errorFocus,
+} as const
+
 const fieldBorder = {
   ...restBorder,
   "&:hover": restBorder,
   [fieldFocus]: focusBorder,
+  '&[data-feedback="error"]': errorField,
   [fieldVariant]: {
     ...restBorder,
     "&:hover": restBorder,
     [fieldFocus]: focusBorder,
+    '&[data-feedback="error"]': errorField,
   },
 } as const
 
