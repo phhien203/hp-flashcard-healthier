@@ -2,6 +2,7 @@ import { afterEach, describe, expect, it, vi } from "vitest"
 
 import {
   DEFAULT_THEME,
+  documentThemeClass,
   parseThemePreference,
   readBroadcastChoice,
   readCookie,
@@ -102,6 +103,18 @@ describe("theme preference", () => {
     expect(systemSchemeFromRequest("fc-color=light")).toBe("light")
     expect(systemSchemeFromRequest(null)).toBe("light")
     expect(systemSchemeFromRequest("fc-color=nope")).toBe("light")
+  })
+
+  it("does not emit .dark for System from the server snapshot", () => {
+    const stale = { preference: "system" as const, resolved: "dark" as const }
+    expect(documentThemeClass(stale, "server")).toBeUndefined()
+    expect(documentThemeClass(stale, "client")).toBe("dark")
+    expect(
+      documentThemeClass({ preference: "dark", resolved: "dark" }, "server")
+    ).toBe("dark")
+    expect(
+      documentThemeClass({ preference: "light", resolved: "light" }, "server")
+    ).toBeUndefined()
   })
 
   it("persists the choice in cookies that survive a reload", () => {

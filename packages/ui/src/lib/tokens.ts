@@ -68,25 +68,42 @@ const linkStyle = {
 } as const
 
 /**
- * Clerk paints input chrome from `colorNeutral` at low alpha (`borderAlpha150`
- * plus a matching shadow), not from `colorBorder`. In dark that translucent
- * edge is about 2.3:1 on the card. A solid semantic border clears the 3:1
- * non-text requirement in both themes.
+ * Clerk's base theme draws the field edge as a translucent box-shadow and
+ * sets `border-width: 0` on `&[data-variant="default"]` (buttons use
+ * `outline`, the select search uses `unstyled`). That attribute selector
+ * beats a `box-shadow: none` on the element, so the shadow stays and a
+ * `border-color` never paints. Repeat the solid border at the same
+ * specificity, including hover and focus, and give it a real width.
+ * `--border` on the card clears 3:1 in both themes; focus uses `--ring`.
  */
-const fieldBorder = {
+const restBorder = {
+  borderWidth: "1px",
+  borderStyle: "solid",
   borderColor: "var(--border)",
   boxShadow: "none",
-  "&:hover": {
-    borderColor: "var(--border)",
-    boxShadow: "none",
-  },
-  "&:focus": {
-    borderColor: "var(--ring)",
-    boxShadow: "none",
-  },
-  "&:focus-visible": {
-    borderColor: "var(--ring)",
-    boxShadow: "none",
+} as const
+
+const focusBorder = {
+  borderWidth: "1px",
+  borderStyle: "solid",
+  borderColor: "var(--ring)",
+  boxShadow: "none",
+} as const
+
+const fieldFocus =
+  '&:focus, &:focus-visible, &:focus-within, &[data-focus-within="true"]'
+
+const fieldVariant =
+  '&[data-variant="default"], &[data-variant="outline"], &[data-variant="unstyled"]'
+
+const fieldBorder = {
+  ...restBorder,
+  "&:hover": restBorder,
+  [fieldFocus]: focusBorder,
+  [fieldVariant]: {
+    ...restBorder,
+    "&:hover": restBorder,
+    [fieldFocus]: focusBorder,
   },
 } as const
 

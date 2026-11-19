@@ -79,12 +79,13 @@ export function readThemeChoice(
 }
 
 /**
- * System scheme for a request that cannot see `prefers-color-scheme`.
- * The resolved cookie from the last visit wins; otherwise light. The
- * stylesheet paints a first visit on a dark OS, and the pre-paint script
- * corrects it once JavaScript runs. A client hint is not read: browsers
- * only send `Sec-CH-Prefers-Color-Scheme` after `Accept-CH`, which this
- * response does not ask for.
+ * Resolved color when a request cannot see `prefers-color-scheme`.
+ * The last visit's `fc-color` cookie wins; otherwise light. It seeds Clerk
+ * and `theme-color` only. The System class is omitted on the server
+ * (`documentThemeClass`) so this cookie cannot force `.dark` over a light
+ * OS. A client hint is not read: browsers only send
+ * `Sec-CH-Prefers-Color-Scheme` after `Accept-CH`, which this response
+ * does not ask for.
  */
 export function systemSchemeFromRequest(
   cookieHeader: string | null | undefined
@@ -115,6 +116,22 @@ export function readThemeFromDocument(): ThemeChoice {
 
 export function themeClassName(resolved: ResolvedTheme): string | undefined {
   return resolved === "dark" ? "dark" : undefined
+}
+
+/**
+ * Class for `<html>`. While the snapshot is still the server's, System stays
+ * classless: a stale `fc-color=dark` cookie must not emit `.dark` when
+ * JavaScript never runs, and the `prefers-color-scheme` rule paints that
+ * case. After the client publishes the live scheme, System gets the class
+ * so it matches the pre-paint script. The two palettes are identical, so
+ * hydration removing the script's class does not flash.
+ */
+export function documentThemeClass(
+  theme: ThemeChoice,
+  source: "server" | "client"
+): string | undefined {
+  if (source === "server" && theme.preference === "system") return undefined
+  return themeClassName(theme.resolved)
 }
 
 export function themeColor(resolved: ResolvedTheme): string {

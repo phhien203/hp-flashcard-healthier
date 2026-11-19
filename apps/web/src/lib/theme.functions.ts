@@ -8,10 +8,10 @@ import {
 import type { ThemeChoice } from "@workspace/ui/lib/theme"
 
 /**
- * Theme for this request. The resolved cookie from the last visit seeds
- * System; otherwise the markup is light and the stylesheet's
- * `prefers-color-scheme` rule paints a dark OS before JavaScript runs.
- * The pre-paint script keeps System in step with the live OS once JS runs.
+ * Theme for this request. System leaves the `.dark` class off so the
+ * stylesheet's `prefers-color-scheme` rule decides; `fc-color` still
+ * seeds Clerk and `theme-color` from the last visit. The pre-paint script
+ * replaces that with the live OS before paint.
  */
 export const readTheme = createServerFn({ method: "GET" }).handler(
   async (): Promise<ThemeChoice> => {

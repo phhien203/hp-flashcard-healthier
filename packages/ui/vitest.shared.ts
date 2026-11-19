@@ -16,6 +16,11 @@ export const browser = {
 
 export const shared: ViteUserConfig = {
   plugins: [react(), tailwindcss()],
+  // Pre-bundle the deps Vite otherwise discovers mid-run. A cold cache then
+  // reloads the browser and fails the first test:browser pass.
+  optimizeDeps: {
+    include: ["class-variance-authority", "radix-ui"],
+  },
   // Fonts and other assets live in the workspace's pnpm store, outside this package.
   server: { fs: { allow: ["../.."] } },
   resolve: {

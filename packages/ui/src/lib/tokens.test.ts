@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest"
+import { userEvent } from "vitest/browser"
 
 import { contrastRatio } from "./color"
 import { clerkAppearance, palette, themeColors } from "./tokens"
@@ -62,6 +63,31 @@ function findMediaStyleRule(
     })
   }
   return found
+}
+
+function expandSelector(parent: string, key: string): string {
+  const parents = parent.split(",").map((part) => part.trim())
+  return key
+    .split(",")
+    .flatMap((part) => parents.map((item) => part.trim().replaceAll("&", item)))
+    .join(",")
+}
+
+function emitCss(selector: string, styles: object): string {
+  const declarations: string[] = []
+  let nested = ""
+  for (const [key, value] of Object.entries(styles)) {
+    if (value && typeof value === "object") {
+      nested += emitCss(expandSelector(selector, key), value)
+    } else {
+      const property = key.replaceAll(
+        /[A-Z]/g,
+        (letter) => `-${letter.toLowerCase()}`
+      )
+      declarations.push(`${property}:${String(value)}`)
+    }
+  }
+  return `${selector}{${declarations.join(";")}}${nested}`
 }
 
 function rgb(hex: string) {
@@ -155,10 +181,95 @@ describe("theme contrast", () => {
     expect(
       contrastRatio(themeColors.light.border, themeColors.light.card)
     ).toBeGreaterThanOrEqual(3)
-    expect(clerkAppearance.elements.formFieldInput.borderColor).toBe(
-      "var(--border)"
-    )
-    expect(clerkAppearance.elements.formFieldInput.boxShadow).toBe("none")
+    expect(
+      contrastRatio(themeColors.dark.ring, themeColors.dark.card)
+    ).toBeGreaterThanOrEqual(3)
+    expect(
+      contrastRatio(themeColors.light.ring, themeColors.light.card)
+    ).toBeGreaterThanOrEqual(3)
+
+    const input = clerkAppearance.elements.formFieldInput
+    const variant =
+      input[
+        '&[data-variant="default"], &[data-variant="outline"], &[data-variant="unstyled"]'
+      ]
+    expect(input.borderWidth).toBe("1px")
+    expect(input.borderStyle).toBe("solid")
+    expect(input.borderColor).toBe("var(--border)")
+    expect(input.boxShadow).toBe("none")
+    expect(input["&:hover"].boxShadow).toBe("none")
+    expect(variant.borderWidth).toBe("1px")
+    expect(variant.borderStyle).toBe("solid")
+    expect(variant.borderColor).toBe("var(--border)")
+    expect(variant.boxShadow).toBe("none")
+    expect(variant["&:hover"].boxShadow).toBe("none")
+    expect(variant["&:hover"].borderWidth).toBe("1px")
+    expect(clerkAppearance.elements.otpCodeFieldInput).toBe(input)
+    expect(clerkAppearance.elements.phoneInputBox).toBe(input)
+    expect(clerkAppearance.elements.selectButton).toBe(input)
+    expect(clerkAppearance.elements.selectSearchInput).toBe(input)
+  })
+
+  it("paints that border over Clerk's variant shadow", async () => {
+    const style = document.createElement("style")
+    const field = clerkAppearance.elements.formFieldInput
+    style.textContent = [
+      '.probe[data-variant="default"]{border-width:0;box-shadow:0px 0px 0px 1px rgba(246,239,232,0.24)}',
+      '.probe[data-variant="default"]:hover{box-shadow:0px 0px 0px 1px rgba(246,239,232,0.45)}',
+      ".phone{border-width:0;box-shadow:0px 0px 0px 1px rgba(46,20,1,0.2)}",
+      emitCss(".probe", field),
+      emitCss(".phone", field),
+    ].join("")
+    document.head.appendChild(style)
+
+    const mount = async (dark: boolean) => {
+      const root = document.createElement("div")
+      if (dark) root.classList.add("dark")
+      const input = document.createElement("input")
+      input.className = "probe"
+      input.dataset.variant = "default"
+      const phone = document.createElement("div")
+      phone.className = "phone"
+      root.append(input, phone)
+      document.body.append(root)
+
+      const colors = dark ? themeColors.dark : themeColors.light
+      const edge = (element: Element) => {
+        const computed = getComputedStyle(element)
+        return {
+          width: computed.borderTopWidth,
+          style: computed.borderTopStyle,
+          color: computed.borderTopColor.replaceAll(" ", ""),
+          shadow: computed.boxShadow,
+        }
+      }
+      expect(edge(input)).toEqual({
+        width: "1px",
+        style: "solid",
+        color: rgb(colors.border),
+        shadow: "none",
+      })
+      expect(edge(phone)).toMatchObject({
+        width: "1px",
+        style: "solid",
+        color: rgb(colors.border),
+        shadow: "none",
+      })
+      await userEvent.hover(input)
+      expect(edge(input).shadow).toBe("none")
+      expect(edge(input).width).toBe("1px")
+      input.focus()
+      expect(edge(input)).toMatchObject({
+        width: "1px",
+        color: rgb(colors.ring),
+        shadow: "none",
+      })
+      root.remove()
+    }
+
+    await mount(true)
+    await mount(false)
+    style.remove()
   })
 
   it("follows a dark OS for System and keeps that palette equal to .dark", () => {

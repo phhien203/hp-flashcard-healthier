@@ -12,10 +12,10 @@ import { Toaster } from "@workspace/ui/components/sonner"
 import { ThemeProvider } from "@workspace/ui/components/theme-provider"
 import appCss from "@workspace/ui/globals.css?url"
 import {
+  documentThemeClass,
   publishedTheme,
   readThemeFromDocument,
   subscribePublishedTheme,
-  themeClassName,
   themeColor,
   themeInitScript,
 } from "@workspace/ui/lib/theme"
@@ -63,11 +63,14 @@ export const Route = createRootRouteWithContext<RouterContext>()({
 
 function RootDocument({ children }: { children: React.ReactNode }) {
   const serverTheme = Route.useRouteContext().theme
-  const theme = React.useSyncExternalStore(
+  // Null until the client publishes. Hydration therefore matches the server
+  // snapshot, which omits `.dark` for System.
+  const live = React.useSyncExternalStore(
     subscribePublishedTheme,
-    () => publishedTheme() ?? serverTheme,
-    () => serverTheme
+    publishedTheme,
+    () => null
   )
+  const theme = live ?? serverTheme
   const resolved = theme.resolved
   // System omits the inline color-scheme so the prefers-color-scheme rule
   // can paint a dark OS when this script never runs. An explicit choice wins.
@@ -84,7 +87,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
   return (
     <html
       lang="en"
-      className={themeClassName(resolved)}
+      className={documentThemeClass(theme, live ? "client" : "server")}
       data-theme={theme.preference}
       style={colorScheme}
       suppressHydrationWarning
